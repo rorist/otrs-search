@@ -1,20 +1,5 @@
 #!/usr/bin/python
 # -*- coding: utf8 -*-
-'''
-Recherche sur OTRS 2.3.4 - jean-baptiste.aubort@epfl.ch - November 2011
-
-DEPENDENCIES:
-apt-get install python-pyme #http://pyme.sourceforge.net/
-
-INSTALLATION:
-- You must have a GPG key to create the password file: gpg --gen-key
-- Create config and password files with: python otrs_create_config.py
-
-08.11.11 JBA Creation du script, recherche basique
-09.11.11 JBA Gestion des sessions 
-16.11.11 JBA Search by Ticket ID or client email 
-18.11.11 JBA Config is in a separate file, ready for publishing
-'''
 
 import urllib, urlparse, httplib, sys, json, csv, tempfile, os, getpass, getopt, time, ConfigParser
 from pyme import core, constants, errors
