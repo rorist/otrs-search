@@ -16,6 +16,7 @@ def usage():
 def help():
     print '''  -a, --amount\t\tAmount of unit to search for in creation date (default: 1)
   -u, --unit\t\tSearch unit for creation date. Possible values are: day, hour, minute, month, week, year (default: day)
+  -g, --no-google\t\tDo not create short link to the ticket
   -v, --verbose\t\tDisplay what is being done
   --id\t\t\tSearch ticket by id
   --client\t\tSearch by customer email
@@ -32,7 +33,7 @@ def shorten(url):
 
 def logged():
     if verbose:
-        print '\033[0;32mVérification de la session\033[0m'
+        print '\033[0;32mSession check\033[0m'
     try:
         conn = httplib.HTTPSConnection(HOST)
         conn.request("GET", REQ, '', get_headers())
@@ -59,7 +60,7 @@ def get_headers():
 
 def create_session():
     if verbose:
-        print '\033[0;32mCréation de la session\033[0m'
+        print '\033[0;32mSession creation\033[0m'
     authfile = os.path.expanduser(OTRS_PASSWD)
     sessfile = '%s/%s'%(tempfile.gettempdir(), OTRS_SESSION)
 
@@ -106,14 +107,17 @@ req_amount = 1
 req_unit = 'day'
 req_ticketid = ''
 req_from = ''
+google = True
 verbose = False
 try:
-    opts, args = getopt.getopt(sys.argv[1:], 'hva:u:', ['help', 'verbose', 'amount=', 'unit=', 'id', 'client'])
+    opts, args = getopt.getopt(sys.argv[1:], 'ghva:u:', ['no-google', 'help', 'verbose', 'amount=', 'unit=', 'id', 'client'])
     req_body = ' '.join(args)
     for opt, arg in opts:
         if opt in ('-h', '--help'):
             help()
             sys.exit(0)
+        elif opt in ('-g', '--no-google'):
+            google = False
         elif opt in ('-v', '--verbose'):
             verbose = True
         elif opt in ('-a', '--amount'):
@@ -188,7 +192,9 @@ for row in tickets:
     queue = row[5]
     title = unicode(row[13], 'utf8')
     date = row[2]
-    link = shorten('https://%s%s?Action=AgentTicketZoom&TicketID=%s&ZoomExpand=1'%(HOST, REQ, int(ticketid)-shift))
+    link = ''
+    if google:
+        link = shorten('https://%s%s?Action=AgentTicketZoom&TicketID=%s&ZoomExpand=1'%(HOST, REQ, int(ticketid)-shift))
     try:
         print '\033[0;32m%s \033[0;34m%s \033[0;33m[%s] \033[0m\033[1m%s\033[0m\033[0m %s\033[0m'%(date, ticketid, queue, title, link)
     except UnicodeDecodeError, e:
