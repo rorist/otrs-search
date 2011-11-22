@@ -20,6 +20,7 @@ CHANGELOG
 - 09.11.11 JBA Gestion des sessions 
 - 16.11.11 JBA Search by Ticket ID or client email 
 - 18.11.11 JBA Config is in a separate file, ready for publishing
+- 22.11.11 JBA No google url shortener links option, missing translation
 
 LICENSE
 -------
