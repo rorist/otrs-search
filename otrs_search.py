@@ -186,7 +186,6 @@ tickets_nb = len(open(f, 'rb').readlines()) - 1
 tickets = csv.reader(csvfile, delimiter=';', quotechar='"')
 tickets.next() # Skip first line
 print '\033[0;31mTicket(s) number: %i\033[0m'%tickets_nb
-shift = 1105502
 for row in tickets:
     ticketid = row[0]
     queue = row[5]
@@ -194,7 +193,7 @@ for row in tickets:
     date = row[2]
     link = ''
     if google:
-        link = shorten('https://%s%s?Action=AgentTicketZoom&TicketID=%s&ZoomExpand=1'%(HOST, REQ, int(ticketid)-shift))
+        link = shorten('https://%s%s?Action=AgentTicketZoom&TicketNumber=%s&ZoomExpand=1'%(HOST, REQ, int(ticketid)))
     try:
         print '\033[0;32m%s \033[0;34m%s \033[0;33m[%s] \033[0m\033[1m%s\033[0m\033[0m %s\033[0m'%(date, ticketid, queue, title, link)
     except UnicodeDecodeError, e:
