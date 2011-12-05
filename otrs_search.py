@@ -114,7 +114,7 @@ req_from = ''
 google = True
 verbose = False
 try:
-    opts, args = getopt.getopt(sys.argv[1:], 'ghva:u:', ['no-google', 'help', 'verbose', 'amount=', 'unit=', 'id', 'client'])
+    opts, args = getopt.getopt(sys.argv[1:], 'ghva:u:', ['no-google', 'help', 'verbose', 'amount=', 'unit=', 'id', 'client='])
     req_body = ' '.join(args)
     for opt, arg in opts:
         if opt in ('-h', '--help'):
@@ -134,8 +134,7 @@ try:
             req_amount = ''
             req_unit = ''
         elif opt == '--client':
-            req_from = req_body
-            req_body = ''
+            req_from = arg
         #elif opt == '--queue':
         #    req_queue = arg
         #elif opt == '--state':
