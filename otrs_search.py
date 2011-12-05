@@ -20,6 +20,8 @@ def help():
   -v, --verbose\t\tDisplay what is being done
   --id\t\t\tSearch ticket by id
   --client\t\tSearch by customer email
+  --queue\t\tTODO: Search by queue name
+  --state\t\tTODO: Search by ticket state. Possible values: 'new', 'open', 'closed'
   -h\t\t\tYou are reading it'''
 
 def shorten(url):
@@ -107,6 +109,8 @@ req_amount = 1
 req_unit = 'day'
 req_ticketid = ''
 req_from = ''
+#req_queue = ''
+#req_state = ''
 google = True
 verbose = False
 try:
@@ -132,6 +136,10 @@ try:
         elif opt == '--client':
             req_from = req_body
             req_body = ''
+        #elif opt == '--queue':
+        #    req_queue = arg
+        #elif opt == '--state':
+        #    req_state = 'open'
 except getopt.GetoptError:
     usage()
 
@@ -167,6 +175,8 @@ params = urllib.urlencode({
     'TicketCreateTimePointStart': 'Last',
     'TicketCreateTimePoint': req_amount,
     'TicketCreateTimePointFormat': req_unit,
+    #'Queues': req_queue,
+    #'StateType': req_state,
     'ResultForm': 'CSV',
 })
 
@@ -187,11 +197,15 @@ tickets = csv.reader(csvfile, delimiter=';', quotechar='"')
 tickets.next() # Skip first line
 print '\033[0;31mTicket(s) number: %i\033[0m'%tickets_nb
 for row in tickets:
-    ticketid = row[0]
-    queue = row[5]
-    title = unicode(row[13], 'utf8')
-    date = row[2]
-    link = ''
+    try:
+        ticketid = row[0]
+        queue = row[5]
+        title = unicode(row[13], 'utf8')
+        date = row[2]
+        link = ''
+    except IndexError, e:
+        print row
+        sys.exit(e)
     if google:
         link = shorten('https://%s%s?Action=AgentTicketZoom&TicketNumber=%s&ZoomExpand=1'%(HOST, REQ, int(ticketid)))
     try:
