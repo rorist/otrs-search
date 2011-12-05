@@ -14,7 +14,9 @@ def usage():
     sys.exit(0)
 
 def help():
-    print '''  -a, --amount\t\tAmount of unit to search for in creation date (default: 1)
+    print '''Usage: %s <request>
+  with <requests> the request string to search. You can add multiple strings without protecting them with \'. You can use the logical operators AND and OR. 
+  -a, --amount\t\tAmount of unit to search for in creation date (default: 1)
   -u, --unit\t\tSearch unit for creation date. Possible values are: day, hour, minute, month, week, year (default: day)
   -g, --no-google\t\tDo not create short link to the ticket
   -v, --verbose\t\tDisplay what is being done
