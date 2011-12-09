@@ -116,6 +116,7 @@ req_from = ''
 #req_state = ''
 google = True
 verbose = False
+fulltext = True
 try:
     opts, args = getopt.getopt(sys.argv[1:], 'ghva:u:', ['no-google', 'help', 'verbose', 'amount=', 'unit=', 'id', 'client='])
     req_body = ' '.join(args)
@@ -136,8 +137,10 @@ try:
             req_body = ''
             req_amount = ''
             req_unit = ''
+            fulltext = False
         elif opt == '--client':
             req_from = arg
+            fulltext = False
         #elif opt == '--queue':
         #    req_queue = arg
         #elif opt == '--state':
@@ -148,7 +151,7 @@ except getopt.GetoptError:
 if verbose:
     print 'Options in use:\n amount=%s, unit=%s'%(req_amount, req_unit)
 
-if len(args) < 1:
+if len(args) < 1 and fulltext:
     usage()
 
 # Get configuration
