@@ -11,8 +11,20 @@ INSTALLATION
 - You must have a GPG key to create the password file: gpg --gen-key
 - Create config and password files with: python otrs_create_config.py
 
+FEATURES
+--------
+- Full text search
+- Search by: id, client
+- Time units and amount support (year, month, ...)
+- URL shortener using goog.gl (with token support)
+- GPG encrypted password file
+- Authenticate once until reboot (uses session cookie)
+
 TODO
 ----
+- Search by: queue name, state
+- Use filename in header to save CSV file
+- More stuff in configuration file
 
 CHANGELOG
 ---------
@@ -21,6 +33,7 @@ CHANGELOG
 - 16.11.11 JBA Search by Ticket ID or client email 
 - 18.11.11 JBA Config is in a separate file, ready for publishing
 - 22.11.11 JBA No google url shortener links option, missing translation
+- 12.11.11 JBA Faster: do not check session with http but relying on session file.
 
 LICENSE
 -------
