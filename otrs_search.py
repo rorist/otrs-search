@@ -36,17 +36,17 @@ def shorten(url):
         return data['id']
     return '(goog.gl: %s)'%data['error']['message']
 
-def logged():
-    if verbose:
-        print '\033[0;32mSession check\033[0m'
-    try:
-        conn = httplib.HTTPSConnection(HOST)
-        conn.request("GET", REQ, '', get_headers())
-        if conn.getresponse().getheader('Content-Disposition') != None:
-            return True
-    except Exception, e:
-        sys.exit(e)
-    return False
+#def logged():
+#    if verbose:
+#        print '\033[0;32mSession check\033[0m'
+#    try:
+#        conn = httplib.HTTPSConnection(HOST)
+#        conn.request("GET", REQ, '', get_headers())
+#        if conn.getresponse().getheader('Content-Disposition') != None:
+#            return True
+#    except Exception, e:
+#        sys.exit(e)
+#    return False
 
 def get_session():
     try:
@@ -68,6 +68,10 @@ def create_session():
         print '\033[0;32mSession creation\033[0m'
     authfile = os.path.expanduser(OTRS_PASSWD)
     sessfile = '%s/%s'%(tempfile.gettempdir(), OTRS_SESSION)
+    try:
+        os.remove(sessfile)
+    except OSError, e:
+        print e
 
     # Get crypted user/pass
     try:
@@ -75,7 +79,7 @@ def create_session():
         crypted = core.Data(open(authfile, 'r').read())
     except IOError, e:
         print 'Please create a password file with User=user&Password=password, encrypted with gnupg (%s)'%e
-        sys.exit(0)
+        sys.exit(e)
     # Decrypt user/pass
     c = core.Context()
     c.set_armor(1)
@@ -103,6 +107,12 @@ def create_session():
 def passphrase_cb(x,y,z):
     print 'Using key: %s'%x
     return getpass.getpass('Passphrase: ')
+
+#def login_check():
+#    if not logged():
+#        if verbose: 
+#            print '\033[0;31mYou are not logged in!\033[0m'
+#        create_session()
 
 ##########
 ## Main
@@ -163,13 +173,11 @@ try:
 except ConfigParser.NoSectionError, e:
     sys.exit('You must create a config file in %s (%s)'%(OTRS_CONFIG, e))
 
-# Login check
-if not logged():
-    if verbose: 
-        print '\033[0;31mYou are not logged in!\033[0m'
+# Create session
+if not os.path.exists('%s/%s'%(tempfile.gettempdir(), OTRS_SESSION)):
     create_session()
 
-# Search
+# Search query
 params = urllib.urlencode({
     'Body': req_body,
     'TicketNumber': req_ticketid,
@@ -190,7 +198,16 @@ if verbose:
     print '\033[0;32mSearching tickets ...\033[0m'
 conn = httplib.HTTPSConnection(HOST)
 conn.request("POST", REQ, params, get_headers())
-csvdata = conn.getresponse().read()
+res = conn.getresponse()
+
+# Check response
+if res.getheader('Content-type') != 'text/csv; charset=utf-8':
+    create_session()
+    sys.exit('Session created, please make request again.')
+
+# Save result
+# TODO: Use filename given in http header
+csvdata = res.read()
 f = tempfile.mktemp()
 csvfile = open(f, 'w+')
 csvfile.write(csvdata)
