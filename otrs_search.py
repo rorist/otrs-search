@@ -20,6 +20,7 @@ def help():
   -a, --amount\t\tAmount of unit to search for in creation date (default: 1)
   -u, --unit\t\tSearch unit for creation date. Possible values are: day, hour, minute, month, week, year (default: day)
   -g, --no-google\t\tDo not create short link to the ticket
+  -r, --reverse\t\tReverse the result order (always sorted by date)
   -v, --verbose\t\tDisplay what is being done
   --id\t\t\tSearch ticket by id
   --client\t\tSearch by customer email
@@ -122,13 +123,14 @@ req_amount = 1
 req_unit = 'day'
 req_ticketid = ''
 req_from = ''
+req_order = 'Up'
 #req_queue = ''
 #req_state = ''
 google = True
 verbose = False
 fulltext = True
 try:
-    opts, args = getopt.getopt(sys.argv[1:], 'ghva:u:', ['no-google', 'help', 'verbose', 'amount=', 'unit=', 'id', 'client='])
+    opts, args = getopt.getopt(sys.argv[1:], 'rghva:u:', ['reverse', 'no-google', 'help', 'verbose', 'amount=', 'unit=', 'id', 'client='])
     req_body = ' '.join(args)
     for opt, arg in opts:
         if opt in ('-h', '--help'):
@@ -136,6 +138,8 @@ try:
             sys.exit(0)
         elif opt in ('-g', '--no-google'):
             google = False
+        elif opt in ('-r', '--reverse'):
+            req_order = 'Down'
         elif opt in ('-v', '--verbose'):
             verbose = True
         elif opt in ('-a', '--amount'):
@@ -188,6 +192,8 @@ params = urllib.urlencode({
     'TicketCreateTimePointStart': 'Last',
     'TicketCreateTimePoint': req_amount,
     'TicketCreateTimePointFormat': req_unit,
+    'SortBy': 'Age',
+    'Order': req_order,
     #'Queues': req_queue,
     #'StateType': req_state,
     'ResultForm': 'CSV',
