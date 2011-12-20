@@ -40,6 +40,7 @@ CHANGELOG
 - 18.11.11 JBA Config is in a separate file, ready for publishing
 - 22.11.11 JBA No google url shortener links option, missing translation
 - 12.11.11 JBA Faster: do not check session with http but relying on session file.
+- 20.12.11 JBA Reverse result option
 
 LICENSE
 -------
