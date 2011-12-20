@@ -28,9 +28,9 @@ TODO
 
 EXAMPLES
 --------
- $ ./otrs_search.py --client dupont
- $ ./otrs_search.py --id 1234567
- $ ./otrs_search.py term1 AND term2
+    $ ./otrs_search.py --client dupont
+    $ ./otrs_search.py --id 1234567
+    $ ./otrs_search.py term1 AND term2
 
 CHANGELOG
 ---------
