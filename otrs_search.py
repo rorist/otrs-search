@@ -22,11 +22,11 @@ def help():
   -g, --no-google\t\tDo not create short link to the ticket
   -r, --reverse\t\tReverse the result order (always sorted by date)
   -v, --verbose\t\tDisplay what is being done
-  --id\t\t\tSearch ticket by id
+  -h\t\t\tYou are reading it
+   --id\t\t\tSearch ticket by id
   --client\t\tSearch by customer email
   --queue\t\tTODO: Search by queue name
-  --state\t\tTODO: Search by ticket state. Possible values: 'new', 'open', 'closed'
-  -h\t\t\tYou are reading it'''
+  --state\t\tTODO: Search by ticket state. Possible values: 'new', 'open', 'closed' '''
 
 def shorten(url):
     conn = httplib.HTTPSConnection('www.googleapis.com')

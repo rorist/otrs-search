@@ -26,6 +26,12 @@ TODO
 - Use filename in header to save CSV file
 - More stuff in configuration file
 
+EXAMPLES
+--------
+ $ ./otrs_search.py --client dupont
+ $ ./otrs_search.py --id 1234567
+ $ ./otrs_search.py term1 AND term2
+
 CHANGELOG
 ---------
 - 08.11.11 JBA Creation du script, recherche basique
