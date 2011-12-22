@@ -227,7 +227,7 @@ print '\033[0;31mTicket(s) number: %i\033[0m'%tickets_nb
 for row in tickets:
     try:
         ticketid = row[0]
-        queue = row[5]
+        queue = unicode(row[5], 'utf8')
         title = unicode(row[13], 'utf8')
         date = row[2]
         link = ''
