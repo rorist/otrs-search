@@ -10,11 +10,11 @@ INSTALLATION
 ------------
 - You must have a GPG key to create the password file
 
-    gpg --gen-key
+    $ gpg --gen-key
 
 - Create config and password files,
 
-    python otrs_create_config.py
+    $ python otrs_create_config.py
 
 FEATURES
 --------
