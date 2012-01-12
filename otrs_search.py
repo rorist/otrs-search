@@ -231,13 +231,17 @@ for row in tickets:
         title = unicode(row[13], 'utf8')
         date = row[2]
         link = ''
+        if row[3]=='open':
+            state = '\033[1m\033[1;31m[%s]\033[0m'%row[3]
+        else:
+            state = '\033[1m\033[1;32m[%s]\033[0m'%row[3]
     except IndexError, e:
         print row
         sys.exit(e)
     if google:
         link = shorten('https://%s%s?Action=AgentTicketZoom&TicketNumber=%s&ZoomExpand=1'%(HOST, REQ, int(ticketid)))
     try:
-        print '\033[0;32m%s \033[0;34m%s \033[0;33m[%s] \033[0m\033[1m%s\033[0m\033[0m %s\033[0m'%(date, ticketid, queue, title, link)
+        print '\033[0;32m%s \033[0;34m%s \033[0;33m[%s] %s \033[0m\033[1m%s\033[0m\033[0m %s\033[0m'%(date, ticketid, queue, state, title, link)
     except UnicodeDecodeError, e:
         print e, row
 
