@@ -231,7 +231,7 @@ for row in tickets:
         title = unicode(row[13], 'utf8')
         date = row[2]
         link = ''
-        if row[3]=='open':
+        if row[3]=='open' or row[3]=='new':
             state = '\033[1m\033[1;31m[%s]\033[0m'%row[3]
         else:
             state = '\033[1m\033[1;32m[%s]\033[0m'%row[3]
