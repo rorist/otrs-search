@@ -234,10 +234,16 @@ csvfile.write(csvdata)
 csvfile.seek(0)
 
 # Show tickets
-tickets_nb = len(open(f, 'rb').readlines()) - 1
-tickets = csv.reader(csvfile, delimiter=';', quotechar='"')
-tickets.next() # Skip first line
+if os.path.getsize(csvfile.name) > 0:
+    tickets_nb = len(open(f, 'rb').readlines()) - 1
+    tickets = csv.reader(csvfile, delimiter=';', quotechar='"')
+    tickets.next() # Skip first line
+else:
+    tickets_nb = 0
+    tickets = {}
+
 print '\033[0;31mTicket(s) number: %i\033[0m'%tickets_nb
+
 for row in tickets:
     try:
         ticketid = row[0]
