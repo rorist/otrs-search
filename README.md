@@ -1,4 +1,4 @@
-Command Line search for OTRS 2.3.4
+Command Line search for OTRS 2.x
 ==================================
 
 DEPENDENCIES
@@ -25,7 +25,7 @@ FEATURES
 - URL shortener using goog.gl (with token support)
 - GPG encrypted password file
 - Authenticate once until reboot (uses session cookie)
-
+- Tested on OTRS 2.3.4 and 2.4.9
 TODO
 ----
 - Search by: queue name, state
