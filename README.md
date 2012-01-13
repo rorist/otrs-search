@@ -1,6 +1,8 @@
 Command Line search for OTRS 2.x
 ==================================
 
+Command line search script for the OTRS 2.x ticketing system, using https resquests in python. Password is encrypted with GnuPG.
+
 DEPENDENCIES
 ------------
 - Python 2.6/2.7 (not compatible with Python 3)
