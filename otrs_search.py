@@ -237,7 +237,21 @@ csvfile.seek(0)
 if os.path.getsize(csvfile.name) > 0:
     tickets_nb = len(open(f, 'rb').readlines()) - 1
     tickets = csv.reader(csvfile, delimiter=';', quotechar='"')
-    tickets.next() # Skip first line
+    # Language dependent field number
+    row = tickets.next()
+    id_queue = 0
+    id_title = 0
+    id_state = 0
+    # English
+    if row[2] == 'Created':
+        id_queue = row.index('Queue')
+        id_title = row.index('Subject')
+        id_state = row.index('State')
+    # French
+    elif row[2] == 'Créé':
+        id_queue = row.index('File')
+        id_title = row.index('Sujet')
+        id_state = row.index('État')
 else:
     tickets_nb = 0
     tickets = {}
@@ -247,13 +261,13 @@ print '\033[0;31mTicket(s) number: %i\033[0m'%tickets_nb
 for row in tickets:
     try:
         ticketid = row[0]
-        queue = unicode(row[5], 'utf8')
-        title = unicode(row[13], 'utf8')
         date = row[2]
+        queue = unicode(row[id_queue], 'utf8')
+        title = unicode(row[id_title], 'utf8')
         link = ''
         state = ''
-        if row[3]=='open' or row[3]=='new':
-            state = '\033[1;31m[%s] \033[0m'%row[3].upper()
+        if row[id_state]=='open' or row[id_state]=='new':
+            state = '\033[1;31m[%s] \033[0m'%row[id_state].upper()
     except IndexError, e:
         print row
         sys.exit(e)
