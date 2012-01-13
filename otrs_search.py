@@ -233,7 +233,7 @@ for row in tickets:
         link = ''
         state = ''
         if row[3]=='open' or row[3]=='new':
-            state = '\033[1;31m[%s] \033[0m'%row[3]
+            state = '\033[1;31m[%s] \033[0m'%row[3].upper()
     except IndexError, e:
         print row
         sys.exit(e)
