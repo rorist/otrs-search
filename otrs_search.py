@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf8 -*-
 
-import urllib, urlparse, httplib, sys, json, csv, tempfile, os, getpass, getopt, time, ConfigParser
+import urllib, urlparse, httplib, sys, json, csv, tempfile, os, getpass, getopt, time, ConfigParser, ssl
 from pyme import core, constants, errors
 
 REQ = '/otrs/index.pl' #FIXME: In config file ?
@@ -91,7 +91,10 @@ def create_session():
         sys.exit(e)
     plain.seek(0, 0)
     # Send credential and get session token
-    conn = httplib.HTTPSConnection(HOST)
+    if use_ssl:
+        conn = httplib.HTTPSConnection(HOST)
+    else:
+        conn = httplib.HTTPConnection(HOST)
     conn.request("POST", REQ, 'Action=Login&RequestedURL=Action%3DLogout&Lang=fr&TimeOffset=-60&'+plain.read(), get_headers())
     res = conn.getresponse()
     cookie = res.getheader('set-cookie')
@@ -169,11 +172,16 @@ if len(args) < 1 and fulltext:
     usage()
 
 # Get configuration
+use_ssl = True
+uri_sch = 'https'
 c = ConfigParser.RawConfigParser()
 c.read(os.path.expanduser(OTRS_CONFIG))
 try:
     HOST = c.get('Main', 'host')
     GOOKEY = c.get('Main', 'google_key')
+    if '443' not in HOST:
+        use_ssl = False
+        uri_sch = 'http'
 except ConfigParser.NoSectionError, e:
     sys.exit('You must create a config file in %s (%s)'%(OTRS_CONFIG, e))
 
@@ -202,9 +210,15 @@ params = urllib.urlencode({
 # Get Tickets
 if verbose:
     print '\033[0;32mSearching tickets ...\033[0m'
-conn = httplib.HTTPSConnection(HOST)
-conn.request("POST", REQ, params, get_headers())
-res = conn.getresponse()
+if use_ssl:
+    conn = httplib.HTTPSConnection(HOST)
+else:
+    conn = httplib.HTTPConnection(HOST)
+try:
+    conn.request("POST", REQ, params, get_headers())
+    res = conn.getresponse()
+except Exception, e:
+    sys.exit(e)
 
 # Check response
 if res.getheader('Content-type') != 'text/csv; charset=utf-8':
@@ -238,7 +252,7 @@ for row in tickets:
         print row
         sys.exit(e)
     if google:
-        link = shorten('https://%s%s?Action=AgentTicketZoom&TicketNumber=%s&ZoomExpand=1'%(HOST, REQ, int(ticketid)))
+        link = shorten('%s://%s%s?Action=AgentTicketZoom&TicketNumber=%s&ZoomExpand=1'%(uri_sch, HOST, REQ, int(ticketid)))
     try:
         print '\033[0;32m%s \033[0;34m%s \033[0;33m[%s] %s\033[0m\033[1m%s\033[0m\033[0m %s\033[0m'%(date, ticketid, queue, state, title, link)
     except UnicodeDecodeError, e:
