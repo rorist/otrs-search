@@ -21,6 +21,7 @@ FEATURES
 - Full text search
 - Search by: id, client
 - Time units and amount support (year, month, ...)
+- English and French supported
 - URL shortener using goog.gl (with token support)
 - GPG encrypted password file
 - Authenticate once until reboot (uses session cookie)
@@ -47,6 +48,7 @@ CHANGELOG
 - 12.11.11 JBA Faster: do not check session with http but relying on session file.
 - 20.12.11 JBA Reverse result option
 - 12.01.12 JBA Add colored ticket state
+- 13.01.12 JBA Support English !!!
 
 LICENSE
 -------
