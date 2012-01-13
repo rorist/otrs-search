@@ -26,6 +26,7 @@ FEATURES
 - GPG encrypted password file
 - Authenticate once until reboot (uses session cookie)
 - Tested on OTRS 2.3.4 and 2.4.9
+
 TODO
 ----
 - Search by: queue name, state
