@@ -46,6 +46,7 @@ CHANGELOG
 - 22.11.11 JBA No google url shortener links option, missing translation
 - 12.11.11 JBA Faster: do not check session with http but relying on session file.
 - 20.12.11 JBA Reverse result option
+- 12.01.12 JBA Add colored ticket state
 
 LICENSE
 -------
