@@ -244,5 +244,5 @@ for row in tickets:
     except UnicodeDecodeError, e:
         print e, row
 
-print 'CSV: file://%s'%f
+print 'CSV: %s'%f
 
