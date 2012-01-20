@@ -133,7 +133,7 @@ def passphrase_cb(x,y,z):
 #        create_session()
 
 def get_args(args):
-    global req_amount, req_unit, req_ticketid, req_body, req_amount, req_unit req_from, fulltext,
+    global req_amount, req_unit, req_ticketid, req_body, req_amount, req_unit, req_from, fulltext
     try:
         opts, reqs = getopt.getopt(args, 'rghva:u:', ['reverse', 'no-google', 'help', 'verbose', 'amount=', 'unit=', 'id', 'client='])
         req_body = ' '.join(reqs)
