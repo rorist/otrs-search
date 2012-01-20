@@ -133,7 +133,7 @@ def passphrase_cb(x,y,z):
 #        create_session()
 
 def get_args(args):
-    global verbose, req_amount, req_unit, req_ticketid, req_body, req_amount, req_unit, fulltext, req_from
+    global req_amount, req_unit, req_ticketid, req_body, req_amount, req_unit req_from, fulltext,
     try:
         opts, reqs = getopt.getopt(args, 'rghva:u:', ['reverse', 'no-google', 'help', 'verbose', 'amount=', 'unit=', 'id', 'client='])
         req_body = ' '.join(reqs)
@@ -190,7 +190,6 @@ def get_conf():
         sys.exit('You must create a config file in %s (%s)'%(OTRS_CONFIG, e))
 
 def get_tickets():
-    global req_body, req_ticketid, req_from, req_amount, req_unit, req_order, verbose, use_ssl, HOST, REQ
     # Construct POST request
     params = urllib.urlencode({
         'Body': req_body,
