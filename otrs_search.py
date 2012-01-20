@@ -37,7 +37,7 @@ def help():
   --id\t\t\tSearch ticket by id
   --client\t\tSearch by customer email
   --queue\t\tTODO: Search by queue name
-  --state\t\tTODO: Search by ticket state. Possible values: 'new', 'open', 'closed' '''
+  --state\t\tTODO: Search by ticket state. Possible values: 'new', 'open', 'closed' '''%sys.argv[0]
 
 def shorten(url):
     conn = httplib.HTTPSConnection('www.googleapis.com')
