@@ -53,6 +53,7 @@ def get_session():
     try:
         f = open('%s/%s'%(tempfile.gettempdir(), OTRS_SESSION), 'r')
         session = f.read()
+        f.close()
         return session
     except IOError, e:
         return ''
@@ -234,7 +235,9 @@ csvfile.write(csvdata)
 csvfile.seek(0)
 
 # Show tickets
-if os.path.getsize(csvfile.name) > 0:
+tickets_nb = 0
+tickets = {}
+if os.path.getsize(csvfile.name) > 1:
     tickets_nb = len(open(f, 'rb').readlines()) - 1
     tickets = csv.reader(csvfile, delimiter=';', quotechar='"')
     # Language dependent field number
@@ -252,9 +255,6 @@ if os.path.getsize(csvfile.name) > 0:
         id_queue = row.index('File')
         id_title = row.index('Sujet')
         id_state = row.index('État')
-else:
-    tickets_nb = 0
-    tickets = {}
 
 print '\033[0;31mTicket(s) number: %i\033[0m'%tickets_nb
 
@@ -277,6 +277,8 @@ for row in tickets:
         print '\033[0;32m%s \033[0;34m%s \033[0;33m[%s] %s\033[0m\033[1m%s\033[0m\033[0m %s\033[0m'%(date, ticketid, queue, state, title, link)
     except UnicodeDecodeError, e:
         print e, row
+
+csvfile.close()
 
 print 'CSV: %s'%f
 
