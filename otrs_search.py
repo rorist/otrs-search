@@ -284,7 +284,7 @@ def show_tickets(res):
         try:
             print '\033[0;32m%s \033[0;34m%s \033[0;33m[%s] %s\033[0m\033[1m%s\033[0m\033[0m %s\033[0m'%(date, ticketid, queue, state, title, link)
         except UnicodeDecodeError, e:
-            print e, row
+            print 'ticketid =',ticketid,e
 
     csvfile.close()
 
