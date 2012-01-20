@@ -9,16 +9,20 @@ OTRS_CONFIG = '~/.otrs-config'
 OTRS_PASSWD = '~/.otrs-passwd'
 OTRS_SESSION = '.otrs-session'
 
-req_amount = 1
-req_unit = 'day'
-req_ticketid = ''
-req_from = ''
-req_order = 'Up'
-#req_queue = ''
-#req_state = ''
-google = True
-verbose = False
-fulltext = True
+options = {
+    'req_amount':    1,
+    'req_unit':      'day',
+    'req_ticketid':  '',
+    'req_from':      '',
+    'req_order':     'Up',
+    #'req_queue':    '',
+    #'req_state':    '',
+    'uri_scheme':    'https',
+    'flag_ssl':      True,
+    'flag_google':   True,
+    'flag_verbose':  False,
+    'flag_fulltext': True,
+}
 
 def usage():
     print 'Usage: %s <request>\nPour plus d\'informations: %s --help'%(sys.argv[0], sys.argv[0])
@@ -49,7 +53,7 @@ def shorten(url):
     return '(goog.gl: %s)'%data['error']['message']
 
 #def logged():
-#    if verbose:
+#    if flag_verbose:
 #        print '\033[0;32mSession check\033[0m'
 #    try:
 #        conn = httplib.HTTPSConnection(HOST)
@@ -79,7 +83,7 @@ def get_headers():
 def create_session(force=False):
     if os.path.exists('%s/%s'%(tempfile.gettempdir(), OTRS_SESSION)) and not force:
         return
-    if verbose:
+    if options['flag_verbose']:
         print '\033[0;32mSession creation\033[0m'
     authfile = os.path.expanduser(OTRS_PASSWD)
     sessfile = '%s/%s'%(tempfile.gettempdir(), OTRS_SESSION)
@@ -105,7 +109,7 @@ def create_session(force=False):
         sys.exit(e)
     plain.seek(0, 0)
     # Send credential and get session token
-    if use_ssl:
+    if options['flag_ssl']:
         conn = httplib.HTTPSConnection(HOST)
     else:
         conn = httplib.HTTPConnection(HOST)
@@ -113,7 +117,7 @@ def create_session(force=False):
     res = conn.getresponse()
     cookie = res.getheader('set-cookie')
     if cookie is not None:
-        if verbose:
+        if options['flag_verbose']:
             print 'Creating %s with %s'%(sessfile, cookie)
         f = open(sessfile, 'w+')
         f.write(cookie)
@@ -128,90 +132,90 @@ def passphrase_cb(x,y,z):
 
 #def login_check():
 #    if not logged():
-#        if verbose: 
+#        if flag_verbose: 
 #            print '\033[0;31mYou are not logged in!\033[0m'
 #        create_session()
 
 def get_args(args):
-    global req_amount, req_unit, req_ticketid, req_body, req_amount, req_unit, req_from, fulltext, verbose, google
+    global options
     try:
         opts, reqs = getopt.getopt(args, 'rghva:u:', ['reverse', 'no-google', 'help', 'verbose', 'amount=', 'unit=', 'id', 'client='])
-        req_body = ' '.join(reqs)
+        options['req_body'] = ' '.join(reqs)
         for opt, arg in opts:
             if opt in ('-h', '--help'):
                 help()
                 sys.exit(0)
             elif opt in ('-g', '--no-google'):
-                google = False
+                options['flag_google'] = False
             elif opt in ('-r', '--reverse'):
-                req_order = 'Down'
+                options['req_order'] = 'Down'
             elif opt in ('-v', '--verbose'):
-                verbose = True
+                options['flag_verbose'] = True
             elif opt in ('-a', '--amount'):
-                req_amount = arg
+                options['req_amount'] = arg
             elif opt in ('-u', '--unit'):
-                req_unit = arg
+                options['req_unit'] = arg
             elif opt == '--id':
-                req_ticketid = req_body
-                req_body = ''
-                req_amount = ''
-                req_unit = ''
-                fulltext = False
+                options['req_ticketid'] = options['req_body']
+                options['req_body'] = ''
+                options['req_amount'] = ''
+                options['req_unit'] = ''
+                options['flag_fulltext'] = False
             elif opt == '--client':
-                req_from = arg
-                fulltext = False
+                options['req_from'] = arg
+                options['flag_fulltext'] = False
             #elif opt == '--queue':
-            #    req_queue = arg
+            #    options['req_queue'] = arg
             #elif opt == '--state':
-            #    req_state = 'open'
+            #    options['req_state'] = 'open'
     except getopt.GetoptError:
         usage()
     
-    if verbose:
-        print 'Options in use:\n amount=%s, unit=%s'%(req_amount, req_unit)
+    if options['flag_verbose']:
+        print 'Options in use: amount=%s, unit=%s'%(options['req_amount'], options['req_unit'])
 
-    if len(args) < 1 and fulltext:
+    if len(args) < 1 and options['flag_fulltext']:
         usage()
 
 # Get configuration
 def get_conf():
-    global use_ssl, uri_sch, HOST, GOOKEY
-    use_ssl = True
-    uri_sch = 'https'
+    global HOST, GOOKEY, options
+    options['flag_ssl'] = True
+    options['uri_scheme'] = 'https'
     c = ConfigParser.RawConfigParser()
     c.read(os.path.expanduser(OTRS_CONFIG))
     try:
         HOST = c.get('Main', 'host')
         GOOKEY = c.get('Main', 'google_key')
         if '443' not in HOST:
-            use_ssl = False
-            uri_sch = 'http'
+            options['flag_ssl'] = False
+            options['uri_scheme'] = 'http'
     except ConfigParser.NoSectionError, e:
         sys.exit('You must create a config file in %s (%s)'%(OTRS_CONFIG, e))
 
 def get_tickets():
     # Construct POST request
     params = urllib.urlencode({
-        'Body': req_body,
-        'TicketNumber': req_ticketid,
-        'From': req_from,
-        'Action': 'AgentTicketSearch',
-        'Subaction': 'Search',
-        'TimeSearchType': 'TimePoint',
-        'TicketCreateTimePointStart': 'Last',
-        'TicketCreateTimePoint': req_amount,
-        'TicketCreateTimePointFormat': req_unit,
-        'SortBy': 'Age',
-        'Order': req_order,
-        #'Queues': req_queue,
-        #'StateType': req_state,
-        'ResultForm': 'CSV',
+        'Body':                         options['req_body'],
+        'TicketNumber':                 options['req_ticketid'],
+        'From':                         options['req_from'],
+        'Action':                       'AgentTicketSearch',
+        'Subaction':                    'Search',
+        'TimeSearchType':               'TimePoint',
+        'TicketCreateTimePointStart':   'Last',
+        'TicketCreateTimePoint':        options['req_amount'],
+        'TicketCreateTimePointFormat':  options['req_unit'],
+        'SortBy':                       'Age',
+        'Order':                        options['req_order'],
+        #'Queues':                      options['req_queue'],
+        #'StateType':                   options['req_state'],
+        'ResultForm':                   'CSV',
     })
 
     # Get Tickets
-    if verbose:
+    if options['flag_verbose']:
         print '\033[0;32mSearching tickets ...\033[0m'
-    if use_ssl:
+    if options['flag_ssl']:
         conn = httplib.HTTPSConnection(HOST)
     else:
         conn = httplib.HTTPConnection(HOST)
@@ -274,8 +278,8 @@ def show_tickets(res):
         except IndexError, e:
             print row
             sys.exit(e)
-        link = '%s://%s%s?Action=AgentTicketZoom&TicketNumber=%s&ZoomExpand=1'%(uri_sch, HOST, REQ, int(ticketid))
-        if google:
+        link = '%s://%s%s?Action=AgentTicketZoom&TicketNumber=%s&ZoomExpand=1'%(options['uri_scheme'], HOST, REQ, int(ticketid))
+        if options['flag_google']:
             link = shorten(link)
         try:
             print '\033[0;32m%s \033[0;34m%s \033[0;33m[%s] %s\033[0m\033[1m%s\033[0m\033[0m %s\033[0m'%(date, ticketid, queue, state, title, link)
