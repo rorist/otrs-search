@@ -30,7 +30,7 @@ def help():
   You can use the logical operators AND and OR. 
   -a, --amount\t\tAmount of unit to search for in creation date (default: 1)
   -u, --unit\t\tSearch unit for creation date. Possible values are: day, hour, minute, month, week, year (default: day)
-  -g, --no-google\t\tDo not create short link to the ticket
+  -g, --no-google\tDo not create short link to the ticket
   -r, --reverse\t\tReverse the result order (always sorted by date)
   -v, --verbose\t\tDisplay what is being done
   -h\t\t\tYou are reading it
@@ -133,7 +133,7 @@ def passphrase_cb(x,y,z):
 #        create_session()
 
 def get_args(args):
-    global req_amount, req_unit, req_ticketid, req_body, req_amount, req_unit, req_from, fulltext
+    global req_amount, req_unit, req_ticketid, req_body, req_amount, req_unit, req_from, fulltext, verbose, google
     try:
         opts, reqs = getopt.getopt(args, 'rghva:u:', ['reverse', 'no-google', 'help', 'verbose', 'amount=', 'unit=', 'id', 'client='])
         req_body = ' '.join(reqs)
@@ -274,8 +274,9 @@ def show_tickets(res):
         except IndexError, e:
             print row
             sys.exit(e)
+        link = '%s://%s%s?Action=AgentTicketZoom&TicketNumber=%s&ZoomExpand=1'%(uri_sch, HOST, REQ, int(ticketid))
         if google:
-            link = shorten('%s://%s%s?Action=AgentTicketZoom&TicketNumber=%s&ZoomExpand=1'%(uri_sch, HOST, REQ, int(ticketid)))
+            link = shorten(link)
         try:
             print '\033[0;32m%s \033[0;34m%s \033[0;33m[%s] %s\033[0m\033[1m%s\033[0m\033[0m %s\033[0m'%(date, ticketid, queue, state, title, link)
         except UnicodeDecodeError, e:
