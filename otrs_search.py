@@ -265,6 +265,11 @@ def show_tickets(res):
 
     print '\033[0;31mTicket(s) number: %i\033[0m'%tickets_nb
 
+    if tickets_nb == 0:
+        csvfile.close()
+        os.remove(csvfile.name)
+        sys.exit(0)
+
     for row in tickets:
         try:
             ticketid = row[0]
