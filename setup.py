@@ -1,5 +1,13 @@
 #!/usr/bin/env python
 from setuptools import setup
+import sys
+
+try:
+    import pyme
+except Exception as e:
+    print 'You need to install the python-pyme package'
+    sys.exit()
+
 
 setup(
     name =              "otrs_search",
@@ -20,4 +28,5 @@ setup(
     scripts =           ['otrs_search.py'],
 )
 
+print
 import otrs_create_config
