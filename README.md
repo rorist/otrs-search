@@ -56,6 +56,7 @@ CHANGELOG
 - 20.12.11 JBA Reverse result option
 - 12.01.12 JBA Add colored ticket state
 - 13.01.12 JBA Support English !!!
+- 13.02.12 JBA Add setup.py script for easier installation
 
 LICENSE
 -------
