@@ -25,7 +25,7 @@ options = {
 }
 
 def usage():
-    print 'Usage: %s <request>\nPour plus d\'informations: %s --help'%(sys.argv[0], sys.argv[0])
+    print 'Usage: %s <request>\nMore information with: %s --help'%(sys.argv[0], sys.argv[0])
     sys.exit(0)
 
 def help():
@@ -75,7 +75,7 @@ def get_session():
 
 def get_headers():
     return {
-        'User-agent': 'OTRS 2.3.4 Search Script',
+        'User-agent': 'OTRS Search Script',
         'Content-type': 'application/x-www-form-urlencoded',
         'Cookie': get_session(),
     }
