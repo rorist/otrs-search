@@ -6,17 +6,21 @@ Command line search script for the OTRS 2.x ticketing system, using https resque
 DEPENDENCIES
 ------------
 - Python 2.6/2.7 (not compatible with Python 3)
-- apt-get install python-pyme #http://pyme.sourceforge.net/
+- PyMe (gpgme wrapper) http://pyme.sourceforge.net/
 
 INSTALLATION
 ------------
+- Install dependencies, on Debian/Ubuntu:
+
+    $ sudo apt-get install python-pyme python-setuptools gnupg
+
 - You must have a GPG key to create the password file
 
     $ gpg --gen-key
 
-- Create config and password files,
+- Install the script and configure it with:
 
-    $ python otrs_create_config.py
+    $ sudo ./setup.py install
 
 FEATURES
 --------
