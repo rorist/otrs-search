@@ -139,7 +139,7 @@ def passphrase_cb(x,y,z):
 def get_args(args):
     global options
     try:
-        opts, reqs = getopt.getopt(args, 'rghva:u:', ['reverse', 'no-google', 'help', 'verbose', 'amount=', 'unit=', 'id', 'client='])
+        opts, reqs = getopt.gnu_getopt(args, 'rghva:u:', ['reverse', 'no-google', 'help', 'verbose', 'amount=', 'unit=', 'id', 'client='])
         options['req_body'] = ' '.join(reqs)
         for opt, arg in opts:
             if opt in ('-h', '--help'):
@@ -289,7 +289,9 @@ def show_tickets(res):
         try:
             print '\033[0;32m%s \033[0;34m%s \033[0;33m[%s] %s\033[0m\033[1m%s\033[0m\033[0m %s\033[0m'%(date, ticketid, queue, state, title, link)
         except UnicodeDecodeError, e:
-            print 'ticketid =',ticketid,e
+            print 'ticketid = %s : %s'%(ticketid,e)
+        except UnicodeEncodeError, e:
+            print 'ticketid = %s : %s'%(ticketid,e)
 
     csvfile.close()
 
