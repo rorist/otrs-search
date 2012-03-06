@@ -39,7 +39,7 @@ def help():
   -v, --verbose\t\tDisplay what is being done
   -h\t\t\tYou are reading it
   --id\t\t\tSearch ticket by id
-  --client\t\tSearch by customer email
+  --from\t\tSearch by requestor (client or otrs agent) email
   --queue\t\tTODO: Search by queue name
   --state\t\tTODO: Search by ticket state. Possible values: 'new', 'open', 'closed' '''%sys.argv[0]
 
@@ -139,7 +139,7 @@ def passphrase_cb(x,y,z):
 def get_args(args):
     global options
     try:
-        opts, reqs = getopt.gnu_getopt(args, 'rghva:u:', ['reverse', 'no-google', 'help', 'verbose', 'amount=', 'unit=', 'id', 'client='])
+        opts, reqs = getopt.gnu_getopt(args, 'rghva:u:', ['reverse', 'no-google', 'help', 'verbose', 'amount=', 'unit=', 'id', 'from='])
         options['req_body'] = ' '.join(reqs)
         for opt, arg in opts:
             if opt in ('-h', '--help'):
@@ -161,7 +161,7 @@ def get_args(args):
                 options['req_amount'] = ''
                 options['req_unit'] = ''
                 options['flag_fulltext'] = False
-            elif opt == '--client':
+            elif opt == '--from':
                 options['req_from'] = arg
                 options['flag_fulltext'] = False
             #elif opt == '--queue':
