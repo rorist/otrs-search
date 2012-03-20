@@ -206,7 +206,7 @@ def get_tickets():
         'TicketCreateTimePoint':        options['req_amount'],
         'TicketCreateTimePointFormat':  options['req_unit'],
         'SortBy':                       'Age',
-        'Order':                        options['req_order'],
+        'OrderBy':                      options['req_order'],
         #'Queues':                      options['req_queue'],
         #'StateType':                   options['req_state'],
         'ResultForm':                   'CSV',
