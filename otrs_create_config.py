@@ -8,9 +8,9 @@ OTRS_PASSWD = '~/.otrs-passwd'
 
 # Encrypted password file creation
 print 'Creating encrypted password file ...'
-sys.stdout.write("Key ID: ")
+sys.stdout.write("GPG Key ID: ")
 keyid = sys.stdin.readline().strip()
-sys.stdout.write('Username: ')
+sys.stdout.write('OTRS Username: ')
 username = sys.stdin.readline().strip()
 password = getpass.getpass()
 
