@@ -31,7 +31,7 @@ def usage():
 def help():
     print '''Usage: %s <request>
   with <requests> the request string to search. You can add multiple strings without protecting them with \'.
-  You can use the logical operators AND and OR. 
+  You can use the logical operators AND and OR.
   -a, --amount\t\tAmount of unit to search for in creation date (default: 1)
   -u, --unit\t\tSearch unit for creation date. Possible values are: day, hour, minute, month, week, year (default: day)
   -g, --no-google\tDo not create short link to the ticket
@@ -49,7 +49,7 @@ def shorten(url):
     data = json.loads(conn.getresponse().read())
     conn.close() # Use a connection pool or smth
     if 'id' in data:
-        return data['id']
+        return str(data['id'])
     return '(goog.gl: %s)'%data['error']['message']
 
 #def logged():
@@ -132,7 +132,7 @@ def passphrase_cb(x,y,z):
 
 #def login_check():
 #    if not logged():
-#        if flag_verbose: 
+#        if flag_verbose:
 #            print '\033[0;31mYou are not logged in!\033[0m'
 #        create_session()
 
@@ -170,7 +170,7 @@ def get_args(args):
             #    options['req_state'] = 'open'
     except getopt.GetoptError:
         usage()
-    
+
     if options['flag_verbose']:
         print 'Options in use: amount=%s, unit=%s'%(options['req_amount'], options['req_unit'])
 
@@ -224,7 +224,7 @@ def get_tickets():
         res = conn.getresponse()
     except Exception, e:
         sys.exit(e)
-    
+
     # Check response
     if res.getheader('Content-type') != 'text/csv; charset=utf-8':
         create_session(force=True)
@@ -272,14 +272,14 @@ def show_tickets(res):
 
     for row in tickets:
         try:
-            ticketid = row[0]
-            date = row[2]
-            queue = unicode(row[id_queue], 'utf8')
-            title = unicode(row[id_title], 'utf8')
-            link = ''
-            state = ''
+            ticketid = str(row[0])
+            date     = str(row[2])
+            queue    = str(row[id_queue])
+            title    = str(row[id_title])
+            link     = ''
+            state    = ''
             if row[id_state]=='open' or row[id_state]=='new':
-                state = '\033[1;31m[%s] \033[0m'%row[id_state].upper()
+                state = '\033[1;31m[%s] \033[0m'%str(row[id_state]).upper()
         except IndexError, e:
             print row
             sys.exit(e)
@@ -289,8 +289,6 @@ def show_tickets(res):
         try:
             print '\033[0;32m%s \033[0;34m%s \033[0;33m[%s] %s\033[0m\033[1m%s\033[0m\033[0m %s\033[0m'%(date, ticketid, queue, state, title, link)
         except UnicodeDecodeError, e:
-            print 'ticketid = %s : %s'%(ticketid,e)
-        except UnicodeEncodeError, e:
             print 'ticketid = %s : %s'%(ticketid,e)
 
     csvfile.close()
