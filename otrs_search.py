@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf8 -*-
 
+from BeautifulSoup import BeautifulSoup
 import urllib, urlparse, httplib, sys, json, csv, tempfile, os, getpass, getopt, time, ConfigParser, ssl
 from pyme import core, constants, errors
 
@@ -15,7 +16,7 @@ options = {
     'req_ticketid':  '',
     'req_from':      '',
     'req_order':     'Up',
-    #'req_queue':    '',
+    'req_queue':     '',
     #'req_state':    '',
     'uri_scheme':    'https',
     'flag_ssl':      True,
@@ -37,10 +38,11 @@ def help():
   -g, --no-google\tDo not create short link to the ticket
   -r, --reverse\t\tReverse the result order (always sorted by date)
   -v, --verbose\t\tDisplay what is being done
+  -q, --queue\t\tSearch by queue name/IDs
+  -Q, --queues\t\tList queues name/IDs
   -h\t\t\tYou are reading it
   --id\t\t\tSearch ticket by id
   --from\t\tSearch by requestor (client or otrs agent) email
-  --queue\t\tTODO: Search by queue name
   --state\t\tTODO: Search by ticket state. Possible values: 'new', 'open', 'closed' '''%sys.argv[0]
 
 def shorten(url):
@@ -139,7 +141,11 @@ def passphrase_cb(x,y,z):
 def get_args(args):
     global options
     try:
-        opts, reqs = getopt.gnu_getopt(args, 'rghva:u:', ['reverse', 'no-google', 'help', 'verbose', 'amount=', 'unit=', 'id', 'from='])
+        opts, reqs = getopt.gnu_getopt(args, 'rghva:u:Qq:', ['reverse', 'no-google',
+                                                           'help', 'verbose',
+                                                           'amount=', 'unit=',
+                                                           'id', 'from=', 'queues',
+                                                           'queue='])
         options['req_body'] = ' '.join(reqs)
         for opt, arg in opts:
             if opt in ('-h', '--help'):
@@ -164,8 +170,19 @@ def get_args(args):
             elif opt == '--from':
                 options['req_from'] = arg
                 options['flag_fulltext'] = False
-            #elif opt == '--queue':
-            #    options['req_queue'] = arg
+            elif opt in ('--queues', '-Q'):
+                queues = get_queues()
+                for k in queues.keys():
+                    print k, queues[k]
+                sys.exit(0)
+            elif opt in ('--queue', '-q'):
+                queues = get_queues()
+                if arg in queues.keys():
+                    options['req_queue'] = arg
+                elif arg in queues.values():
+                    a = [k for k,v in queues.items() if v == arg]
+                    if len(a) > 0:
+                        options['req_queue'] = a[0]
             #elif opt == '--state':
             #    options['req_state'] = 'open'
     except getopt.GetoptError:
@@ -207,7 +224,7 @@ def get_tickets():
         'TicketCreateTimePointFormat':  options['req_unit'],
         'SortBy':                       'Age',
         'OrderBy':                      options['req_order'],
-        #'Queues':                      options['req_queue'],
+        'QueueIDs':                     options['req_queue'],
         #'StateType':                   options['req_state'],
         'ResultForm':                   'CSV',
     })
@@ -230,6 +247,23 @@ def get_tickets():
         create_session(force=True)
         sys.exit('Session created, please make request again.')
 
+    return res
+
+def get_queues():
+    global HOST
+    if options['flag_ssl']:
+        conn = httplib.HTTPSConnection(HOST)
+    else:
+        conn = httplib.HTTPConnection(HOST)
+    try:
+        conn.request("GET", REQ+'?Action=AgentTicketSearch', '', get_headers())
+        res = conn.getresponse()
+    except Exception, e:
+        sys.exit(e)
+    soup = BeautifulSoup(res.read())
+    res = {}
+    for queue in soup.find('select', {'name': 'QueueIDs'}).findAll('option'):
+        res[queue.get('value')] = queue.getText().replace('&nbsp;', '-')
     return res
 
 def show_tickets(res):
@@ -296,8 +330,8 @@ def show_tickets(res):
     print 'CSV: %s'%f
 
 if __name__ == '__main__':
-    get_args(sys.argv[1:])
     get_conf()
+    get_args(sys.argv[1:])
     create_session()
     res = get_tickets()
     show_tickets(res)
