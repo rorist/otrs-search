@@ -49,7 +49,7 @@ def shorten(url):
     data = json.loads(conn.getresponse().read())
     conn.close() # Use a connection pool or smth
     if 'id' in data:
-        return str(data['id'])
+        return data['id']
     return '(goog.gl: %s)'%data['error']['message']
 
 #def logged():
@@ -279,7 +279,7 @@ def show_tickets(res):
             link     = ''
             state    = ''
             if row[id_state]=='open' or row[id_state]=='new':
-                state = '\033[1;31m[%s] \033[0m'%str(row[id_state]).upper().decode('utf-8')
+                state = '\033[1;31m[%s] \033[0m'%row[id_state].upper().decode('utf-8')
         except IndexError, e:
             print row
             sys.exit(e)
