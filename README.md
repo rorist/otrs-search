@@ -12,7 +12,7 @@ INSTALLATION
 ------------
 - Install dependencies, on Debian/Ubuntu:
 
-    $ sudo apt-get install python-pyme python-setuptools gnupg
+    $ sudo apt-get install python-pyme python-beautifulsoup python-setuptools gnupg
 
 - You must have a GPG key to create the password file
 
@@ -25,7 +25,7 @@ INSTALLATION
 FEATURES
 --------
 - Full text search
-- Search by: id, client
+- Search by: id, client, queques
 - Time units and amount support (year, month, ...)
 - English and French supported
 - URL shortener using goog.gl (with token support)
@@ -35,7 +35,7 @@ FEATURES
 
 TODO
 ----
-- Search by: queue name, state
+- Search by: state
 - Use filename in header to save CSV file
 - More stuff in configuration file
 
@@ -57,6 +57,7 @@ CHANGELOG
 - 12.01.12 JBA Add colored ticket state
 - 13.01.12 JBA Support English !!!
 - 13.02.12 JBA Add setup.py script for easier installation
+- 31.10.12 JBA Filter by queque, list queques
 
 LICENSE
 -------
