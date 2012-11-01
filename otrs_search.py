@@ -282,7 +282,6 @@ def show_tickets(res):
 
     # Show tickets
     tickets_nb = 0
-    tickets = {}
     if os.path.getsize(csvfile.name) > 1:
         tickets_nb = len(open(f, 'rb').readlines()) - 1
         tickets = csv.reader(csvfile, delimiter=';', quotechar='"')

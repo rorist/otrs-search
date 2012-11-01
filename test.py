@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import unittest
 import otrs_search
-import os, tempfile
+import os, sys, tempfile
 
 class TestSearch(unittest.TestCase):
 
@@ -16,9 +16,12 @@ class TestSearch(unittest.TestCase):
         otrs_search.create_session()
         self.assertTrue(os.path.exists(sessfile))
 
-if __name__ == '__main__':
-        unittest.main()
+    def test_search(self):
+        args = ['-a', '1', '-u', 'day', '-g']
+        otrs_search.get_args(args)
+        res = otrs_search.get_tickets()
+        otrs_search.show_tickets(res)
+        return True
 
-#get_args(sys.argv[1:])
-#res = get_tickets()
-#show_tickets(res)
+if __name__ == '__main__':
+    unittest.main()
