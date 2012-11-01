@@ -254,7 +254,6 @@ def get_tickets():
     return res
 
 def get_queues():
-    global HOST
     if options['flag_ssl']:
         conn = httplib.HTTPSConnection(HOST)
     else:
