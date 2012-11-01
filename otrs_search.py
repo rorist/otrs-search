@@ -16,7 +16,7 @@ options = {
     'req_ticketid':  '',
     'req_from':      '',
     'req_order':     'Up',
-    'req_queue':     '',
+    #'req_queue':     '',
     #'req_state':    '',
     'uri_scheme':    'https',
     'flag_ssl':      True,
@@ -214,7 +214,7 @@ def get_conf():
 
 def get_tickets():
     # Construct POST request
-    params = urllib.urlencode({
+    params = {
         'Body':                         options['req_body'],
         'TicketNumber':                 options['req_ticketid'],
         'From':                         options['req_from'],
@@ -226,10 +226,12 @@ def get_tickets():
         'TicketCreateTimePointFormat':  options['req_unit'],
         'SortBy':                       'Age',
         'OrderBy':                      options['req_order'],
-        'QueueIDs':                     options['req_queue'],
         #'StateType':                   options['req_state'],
         'ResultForm':                   'CSV',
-    })
+    }
+    if 'req_queue' in options:
+        params['QueueIDs'] = options['req_queue']
+    params = urllib.urlencode(params)
 
     # Get Tickets
     if options['flag_verbose']:
