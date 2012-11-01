@@ -260,7 +260,9 @@ def get_queues():
     else:
         conn = httplib.HTTPConnection(HOST)
     try:
-        conn.request("GET", REQ+'?Action=AgentTicketSearch', '', get_headers())
+        conn.request("POST", REQ, urllib.urlencode({
+            'Action': 'AgentTicketSearch',
+            'Subaction': 'AJAX'}), get_headers())
         res = conn.getresponse()
     except Exception, e:
         sys.exit(e)
