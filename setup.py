@@ -26,7 +26,7 @@ setup(
     ],
     py_modules =        ['otrs_search'],
     scripts =           ['otrs_search.py'],
-    install_requires =  ['pyme', 'BeautifulSoup'],
+    requires =  ['pyme', 'BeautifulSoup'],
 )
 
 print
