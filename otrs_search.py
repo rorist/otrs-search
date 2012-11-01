@@ -171,11 +171,13 @@ def get_args(args):
                 options['req_from'] = arg
                 options['flag_fulltext'] = False
             elif opt in ('--queues', '-Q'):
+                create_session()
                 queues = get_queues()
                 for k in queues.keys():
                     print k, queues[k]
                 sys.exit(0)
             elif opt in ('--queue', '-q'):
+                create_session()
                 queues = get_queues()
                 if arg in queues.keys():
                     options['req_queue'] = arg
