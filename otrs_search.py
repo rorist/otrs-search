@@ -109,7 +109,8 @@ def create_session(force=False):
     try:
         c.op_decrypt(crypted, plain)
     except errors.GPGMEError, e:
-        sys.exit(e)
+        print '\033[0;31mGPG error: reading password in plain text\033[0m]]'
+        plain = core.Data(open(authfile, 'r').read())
     plain.seek(0, 0)
     # Send credential and get session token
     if options['flag_ssl']:
