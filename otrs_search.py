@@ -2,7 +2,7 @@
 # -*- coding: utf8 -*-
 
 from BeautifulSoup import BeautifulSoup
-import urllib, urlparse, httplib, sys, json, csv, tempfile, os, getpass, getopt, time, ConfigParser, ssl
+import urllib, urlparse, httplib, sys, json, csv, tempfile, os, getpass, getopt, time, ConfigParser, ssl, codecs
 from pyme import core, constants, errors
 
 REQ = '/otrs/index.pl' #FIXME: In config file ?
@@ -313,7 +313,7 @@ def show_tickets(res):
     for row in tickets:
         try:
             ticketid = row[0]
-            date     = row[2]
+            date     = row[2].decode('utf-8')
             queue    = row[id_queue].decode('utf-8')
             title    = row[id_title].decode('utf-8')
             link     = ''
@@ -326,16 +326,18 @@ def show_tickets(res):
         link = '%s://%s%s?Action=AgentTicketZoom&TicketNumber=%s&ZoomExpand=1'%(options['uri_scheme'], HOST, REQ, int(ticketid))
         if options['flag_google']:
             link = shorten(link)
-        #try:
-        print '\033[0;32m%s \033[0;34m%s \033[0;33m[%s] %s\033[0m\033[1m%s\033[0m\033[0m %s\033[0m'%(date, ticketid, queue, state, title, link)
-        #except UnicodeDecodeError, e:
-            #print 'ticketid = %s : %s'%(ticketid,e)
+        try:
+            print '\033[0;32m%s \033[0;34m%s \033[0;33m[%s] %s\033[0m\033[1m%s\033[0m\033[0m %s\033[0m'%(date, ticketid, queue, state, title, link)
+        except UnicodeEncodeError, e:
+            print 'ticketid = %s : %s'%(ticketid,e)
 
     csvfile.close()
 
     print 'CSV: %s'%f
 
 if __name__ == '__main__':
+    UTF8Writer = codecs.getwriter('utf8')
+    sys.stdout = UTF8Writer(sys.stdout)
     get_conf()
     get_args(sys.argv[1:])
     create_session()
