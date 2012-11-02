@@ -17,14 +17,21 @@ class TestSearch(unittest.TestCase):
         self.assertTrue(os.path.exists(sessfile))
 
     def test_search(self):
-        args = ['-a', '1', '-u', 'day', '-g']
+        args = ['-a', '1', '-u', 'week', '-g']
         otrs_search.get_args(args)
         res = otrs_search.get_tickets()
-        otrs_search.show_tickets(res)
-        out = sys.stdout.getvalue()
-        a = 'ticket(s)' in out
-        b = 'CSV:' in out
-        self.assertTrue(a and b)
+        try:
+            otrs_search.show_tickets(res)
+        except SystemExit, e:
+            out = sys.stdout.getvalue()
+            a = 'ticket(s)' in out
+            self.assertTrue(a)
+            self.assertEquals(e.code, 0)
+        else:
+            out = sys.stdout.getvalue()
+            a = 'ticket(s)' in out
+            b = 'CSV:' in out
+            self.assertTrue(a and b)
 
     def test_queues(self):
         args = ['-Q']
