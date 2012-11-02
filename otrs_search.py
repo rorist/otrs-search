@@ -26,7 +26,8 @@ options = {
 }
 
 def usage():
-    print 'Usage: %s <request>\nMore information with: %s --help'%(sys.argv[0], sys.argv[0])
+    pth = os.path.basename(sys.argv[0])
+    print 'Usage: %s <request>\nMore information with: %s --help'%(pth, pth)
     sys.exit(0)
 
 def help():
@@ -43,7 +44,7 @@ def help():
   -h\t\t\tYou are reading it
   --id\t\t\tSearch ticket by id
   --from\t\tSearch by requestor (client or otrs agent) email
-  --state\t\tTODO: Search by ticket state. Possible values: 'new', 'open', 'closed' '''%sys.argv[0]
+  --state\t\tTODO: Search by ticket state. Possible values: 'new', 'open', 'closed' '''%os.path.basename(sys.argv[0])
 
 def shorten(url):
     conn = httplib.HTTPSConnection('www.googleapis.com')
