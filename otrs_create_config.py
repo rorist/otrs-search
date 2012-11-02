@@ -33,7 +33,7 @@ try:
     crypted = cipher.read()
 except errors.GPGMEError, e:
     print 'Invalid key: %s'%e
-    print '\033[0;31mUsing plain text password instead!\033[0m]]'
+    print '\033[0;31mUsing plain text password instead!\033[0m'
     crypted = plain.read()
 
 filename = os.path.expanduser(OTRS_PASSWD)
