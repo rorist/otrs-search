@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import unittest
 import otrs_search
-import os, sys, tempfile
+import os, sys, re, tempfile
 
 class TestSearch(unittest.TestCase):
 
@@ -21,7 +21,21 @@ class TestSearch(unittest.TestCase):
         otrs_search.get_args(args)
         res = otrs_search.get_tickets()
         otrs_search.show_tickets(res)
-        return True
+        out = sys.stdout.getvalue()
+        a = 'number:' in out
+        b = 'CSV:' in out
+        self.assertTrue(a and b)
+
+    def test_queues(self):
+        args = ['-Q']
+        try:
+            otrs_search.get_args(args)
+        except SystemExit, e:
+            out = sys.stdout.getvalue()
+            self.assertIsNotNone(re.search('\d+ -*', out))
+            self.assertEquals(e.code, 0)
+        else:
+            self.fail('SystemExit expected')
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(buffer=True)
