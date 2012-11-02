@@ -2,13 +2,15 @@
 # -*- coding: utf8 -*-
 
 from BeautifulSoup import BeautifulSoup
-import urllib, urlparse, httplib, sys, json, csv, tempfile, os, getpass, getopt, time, ConfigParser, ssl, codecs
+import urllib, urlparse, httplib, sys, json, csv, tempfile, os, getpass, getopt
+import time, ConfigParser, ssl, codecs, re
 from pyme import core, constants, errors
 
 REQ = '/otrs/index.pl' #FIXME: In config file ?
 OTRS_CONFIG = '~/.otrs-config'
 OTRS_PASSWD = '~/.otrs-passwd'
 OTRS_SESSION = '.otrs-session'
+QUEUES = {}
 
 options = {
     'req_amount':    1,
@@ -16,7 +18,6 @@ options = {
     'req_ticketid':  '',
     'req_from':      '',
     'req_order':     'Up',
-    #'req_queue':     '',
     #'req_state':    '',
     'uri_scheme':    'https',
     'flag_ssl':      True,
@@ -39,7 +40,7 @@ def help():
   -g, --no-google\tDo not create short link to the ticket
   -r, --reverse\t\tReverse the result order (always sorted by date)
   -v, --verbose\t\tDisplay what is being done
-  -q, --queue\t\tSearch by queue name/IDs
+  -q, --queue\t\tSearch by queue name/IDs, it machtes the first queue, case insensitive
   -Q, --queues\t\tList queues name/IDs
   -h\t\t\tYou are reading it
   --id\t\t\tSearch ticket by id
@@ -174,17 +175,18 @@ def get_args(args):
                 options['flag_fulltext'] = False
             elif opt in ('--queues', '-Q'):
                 create_session()
-                queues = get_queues()
-                for k in queues.keys():
-                    print k, queues[k]
+                get_queues()
+                for k in QUEUES.keys():
+                    print k, QUEUES[k]
                 sys.exit(0)
             elif opt in ('--queue', '-q'):
                 create_session()
-                queues = get_queues()
-                if arg in queues.keys():
+                get_queues()
+                if arg in QUEUES.keys():
                     options['req_queue'] = arg
-                elif arg in queues.values():
-                    a = [k for k,v in queues.items() if v == arg]
+                else:
+                    a = [k for k,v in QUEUES.items()
+                         if re.match('.*'+arg.lower()+'.*', v.lower()) != None]
                     if len(a) > 0:
                         options['req_queue'] = a[0]
             #elif opt == '--state':
@@ -193,7 +195,8 @@ def get_args(args):
         usage()
 
     if options['flag_verbose']:
-        print 'Options in use: amount=%s, unit=%s'%(options['req_amount'], options['req_unit'])
+        print 'Options in use: amount=%s, unit=%s'%(
+            options['req_amount'], options['req_unit'])
 
     if len(args) < 1 and options['flag_fulltext']:
         usage()
@@ -256,6 +259,9 @@ def get_tickets():
     return res
 
 def get_queues():
+    global QUEUES
+    if len(QUEUES) > 0:
+        return
     if options['flag_ssl']:
         conn = httplib.HTTPSConnection(HOST)
     else:
@@ -268,10 +274,9 @@ def get_queues():
     except Exception, e:
         sys.exit(e)
     soup = BeautifulSoup(res.read())
-    res = {}
+    QUEUES = {}
     for queue in soup.find('select', {'name': 'QueueIDs'}).findAll('option'):
-        res[queue.get('value')] = queue.getText().replace('&nbsp;', '-')
-    return res
+        QUEUES[queue.get('value')] = queue.getText().replace('&nbsp;', '-')
 
 def show_tickets(res):
     # Save result
@@ -303,7 +308,11 @@ def show_tickets(res):
             id_title = row.index('Sujet')
             id_state = row.index('État')
 
-    print '\033[0;31mTicket(s) number: %i\033[0m'%tickets_nb
+    if 'req_queue' in options:
+        print '\033[0;31m%i ticket(s) in %s\033[0m'%(
+            tickets_nb, QUEUES[options['req_queue']].replace('-', ''))
+    else:
+        print '\033[0;31m%i ticket(s)\033[0m'%tickets_nb
 
     if tickets_nb == 0:
         csvfile.close()
@@ -323,11 +332,13 @@ def show_tickets(res):
         except IndexError, e:
             print row
             sys.exit(e)
-        link = '%s://%s%s?Action=AgentTicketZoom&TicketNumber=%s&ZoomExpand=1'%(options['uri_scheme'], HOST, REQ, int(ticketid))
+        link = '%s://%s%s?Action=AgentTicketZoom&TicketNumber=%s&ZoomExpand=1'%(
+            options['uri_scheme'], HOST, REQ, int(ticketid))
         if options['flag_google']:
             link = shorten(link)
         try:
-            print '\033[0;32m%s \033[0;34m%s \033[0;33m[%s] %s\033[0m\033[1m%s\033[0m\033[0m %s\033[0m'%(date, ticketid, queue, state, title, link)
+            print '\033[0;32m%s \033[0;34m%s \033[0;33m[%s] %s\033[0m\033[1m%s\033[0m\033[0m %s\033[0m'%(
+                date, ticketid, queue, state, title, link)
         except UnicodeEncodeError, e:
             print 'ticketid = %s : %s'%(ticketid,e)
 

@@ -22,7 +22,7 @@ class TestSearch(unittest.TestCase):
         res = otrs_search.get_tickets()
         otrs_search.show_tickets(res)
         out = sys.stdout.getvalue()
-        a = 'number:' in out
+        a = 'ticket(s)' in out
         b = 'CSV:' in out
         self.assertTrue(a and b)
 
