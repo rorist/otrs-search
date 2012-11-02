@@ -58,6 +58,7 @@ CHANGELOG
 - 13.01.12 JBA Support English !!!
 - 13.02.12 JBA Add setup.py script for easier installation
 - 31.10.12 JBA Filter by queque, list queques
+- 02.11.12 JBA Add queue partial name matching
 
 LICENSE
 -------
