@@ -187,7 +187,7 @@ def get_args(args):
                 if arg in [i[0] for i in QUEUES]:
                     options['req_queue'] = arg
                 else:
-                    a = [i[0] for i in REQUEST if re.match('.*'+arg.lower()+'.*', i[1].lower()) != None]
+                    a = [i[0] for i in QUEUES if re.match('.*'+arg.lower()+'.*', i[1].lower()) != None]
                     if len(a) > 0:
                         options['req_queue'] = a[0]
             #elif opt == '--state':
