@@ -17,13 +17,13 @@ options = {
     'req_unit':      'day',
     'req_ticketid':  '',
     'req_from':      '',
+    'req_client':    '',
     'req_order':     'Up',
     #'req_state':    '',
     'uri_scheme':    'https',
     'flag_ssl':      True,
     'flag_google':   True,
     'flag_verbose':  False,
-    'flag_fulltext': True,
 }
 
 def usage():
@@ -44,6 +44,7 @@ def help():
   -Q, --queues\t\tList queues name/IDs
   -h\t\t\tYou are reading it
   --id\t\t\tSearch ticket by id
+  --client\t\tSearch by Client ID
   --from\t\tSearch by requestor (client or otrs agent) email
   --state\t\tTODO: Search by ticket state. Possible values: 'new', 'open', 'closed' '''%os.path.basename(sys.argv[0])
 
@@ -148,7 +149,7 @@ def get_args(args):
                                                            'help', 'verbose',
                                                            'amount=', 'unit=',
                                                            'id', 'from=', 'queues',
-                                                           'queue='])
+                                                           'queue=', 'client='])
         options['req_body'] = ' '.join(reqs)
         for opt, arg in opts:
             if opt in ('-h', '--help'):
@@ -169,10 +170,10 @@ def get_args(args):
                 options['req_body'] = ''
                 options['req_amount'] = ''
                 options['req_unit'] = ''
-                options['flag_fulltext'] = False
             elif opt == '--from':
                 options['req_from'] = arg
-                options['flag_fulltext'] = False
+            elif opt == '--client':
+                options['req_client'] = arg
             elif opt in ('--queues', '-Q'):
                 create_session()
                 get_queues()
@@ -198,7 +199,7 @@ def get_args(args):
         print 'Options in use: amount=%s, unit=%s'%(
             options['req_amount'], options['req_unit'])
 
-    if len(args) < 1 and options['flag_fulltext']:
+    if len(args) < 1:
         usage()
 
 # Get configuration
