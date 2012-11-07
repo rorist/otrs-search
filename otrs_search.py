@@ -224,6 +224,7 @@ def get_tickets():
         'Body':                         options['req_body'],
         'TicketNumber':                 options['req_ticketid'],
         'From':                         options['req_from'],
+        'CustomerID':                   options['req_client'],
         'Action':                       'AgentTicketSearch',
         'Subaction':                    'Search',
         'TimeSearchType':               'TimePoint',
