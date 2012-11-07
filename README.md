@@ -1,12 +1,13 @@
-Command Line search for OTRS 2.x
+Command Line search for OTRS 2.x/3.x
 ==================================
 
-Command line search script for the OTRS 2.x ticketing system, using https resquests in python. Password is encrypted with GnuPG.
+Command line search script for the OTRS 2.x/3.x ticketing system, using https resquests in python. Password is encrypted with GnuPG.
 
 DEPENDENCIES
 ------------
 - Python 2.6/2.7 (not compatible with Python 3)
 - PyMe (gpgme wrapper) http://pyme.sourceforge.net/
+- Python BeautifulSoup http://www.crummy.com/software/BeautifulSoup/
 
 INSTALLATION
 ------------
@@ -25,7 +26,7 @@ INSTALLATION
 FEATURES
 --------
 - Full text search
-- Search by: id, client, queques
+- Search by: id, client, operator, queues
 - Time units and amount support (year, month, ...)
 - English and French supported
 - URL shortener using goog.gl (with token support)
@@ -59,6 +60,7 @@ CHANGELOG
 - 13.02.12 JBA Add setup.py script for easier installation
 - 31.10.12 JBA Filter by queque, list queques
 - 02.11.12 JBA Add queue partial name matching
+- 07.11.12 JBA Search by client id
 
 LICENSE
 -------
