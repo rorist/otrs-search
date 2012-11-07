@@ -44,5 +44,22 @@ class TestSearch(unittest.TestCase):
         else:
             self.fail('SystemExit expected')
 
+    def test_queue(self):
+        args = ['-q', '1', '-u', 'year', '-a', '5']
+        otrs_search.get_args(args)
+        res = otrs_search.get_tickets()
+        try:
+            otrs_search.show_tickets(res)
+        except SystemExit, e:
+            out = sys.stdout.getvalue()
+            a = 'ticket(s)' in out
+            self.assertTrue(a)
+            self.assertEquals(e.code, 0)
+        else:
+            out = sys.stdout.getvalue()
+            a = 'ticket(s)' in out
+            b = 'CSV:' in out
+            self.assertTrue(a and b)
+
 if __name__ == '__main__':
     unittest.main(buffer=True)
