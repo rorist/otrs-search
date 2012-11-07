@@ -46,7 +46,7 @@ def help():
   --id\t\t\tSearch ticket by id
   --client\t\tSearch by Client ID
   --from\t\tSearch by requestor (client or otrs agent) email
-  --state\t\tTODO: Search by ticket state. Possible values: 'new', 'open', 'closed' '''%os.path.basename(sys.argv[0])
+  --state\t\tTODO: Search by ticket state. Possible values: 'new', 'open', 'closed', 'merged', 'pending', 'removed' '''%os.path.basename(sys.argv[0])
 
 def shorten(url):
     conn = httplib.HTTPSConnection('www.googleapis.com')
@@ -177,17 +177,17 @@ def get_args(args):
             elif opt in ('--queues', '-Q'):
                 create_session()
                 get_queues()
-                for k in QUEUES.keys():
-                    print k, QUEUES[k]
+                for k in QUEUES:
+                    print k[0], k[1]
+                print QUEUES
                 sys.exit(0)
             elif opt in ('--queue', '-q'):
                 create_session()
                 get_queues()
-                if arg in QUEUES.keys():
+                if arg in [i[0] for i in QUEUES]:
                     options['req_queue'] = arg
                 else:
-                    a = [k for k,v in QUEUES.items()
-                         if re.match('.*'+arg.lower()+'.*', v.lower()) != None]
+                    a = [i[0] for i in REQUEST if re.match('.*'+arg.lower()+'.*', i[1].lower()) != None]
                     if len(a) > 0:
                         options['req_queue'] = a[0]
             #elif opt == '--state':
@@ -276,9 +276,9 @@ def get_queues():
     except Exception, e:
         sys.exit(e)
     soup = BeautifulSoup(res.read())
-    QUEUES = {}
+    QUEUES = []
     for queue in soup.find('select', {'name': 'QueueIDs'}).findAll('option'):
-        QUEUES[queue.get('value')] = queue.getText().replace('&nbsp;', '-')
+        QUEUES.append([str(queue.get('value')), queue.getText().replace('&nbsp;', '-')])
 
 def show_tickets(res):
     # Save result
@@ -312,7 +312,7 @@ def show_tickets(res):
 
     if 'req_queue' in options:
         print '\033[0;31m%i ticket(s) in %s\033[0m'%(
-            tickets_nb, QUEUES[options['req_queue']].replace('-', ''))
+            tickets_nb, [i[1].replace('-', '') for i in QUEUES if i[0]==options['req_queue']][0])
     else:
         print '\033[0;31m%i ticket(s)\033[0m'%tickets_nb
 
