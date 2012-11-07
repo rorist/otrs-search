@@ -29,13 +29,13 @@ class TestSearch(unittest.TestCase):
 
     def test_queue(self):
         args = ['-q', '1', '-u', 'year', '-a', '5']
-        self.search_test(args)
+        self.search(args)
 
     def test_search(self):
         args = ['-a', '1', '-u', 'week', '-g']
-        self.search_test(args)
+        self.search(args)
 
-    def search_test(self, args):
+    def search(self, args):
         otrs_search.get_args(args)
         res = otrs_search.get_tickets()
         try:
