@@ -48,6 +48,10 @@ def help():
   --from\t\tSearch by requestor (client or otrs agent) email
   --state\t\tTODO: Search by ticket state. Possible values: 'new', 'open', 'closed', 'merged', 'pending', 'removed' '''%os.path.basename(sys.argv[0])
 
+def debug(message):
+    if options['flag_verbose']:
+        print '\033[0;30m--%s\033[0m'%message
+
 def shorten(url):
     conn = httplib.HTTPSConnection('www.googleapis.com')
     conn.request("POST", '/urlshortener/v1/url?key=%s&fields=id'%GOOKEY, '{"longUrl": "%s"}'%url, {'Content-Type': 'application/json'})
@@ -70,6 +74,7 @@ def shorten(url):
 #    return False
 
 def get_session():
+    debug('Get session')
     try:
         f = open('%s/%s'%(tempfile.gettempdir(), OTRS_SESSION), 'r')
         session = f.read()
@@ -88,8 +93,7 @@ def get_headers():
 def create_session(force=False):
     if os.path.exists('%s/%s'%(tempfile.gettempdir(), OTRS_SESSION)) and not force:
         return
-    if options['flag_verbose']:
-        print '\033[0;32mSession creation\033[0m'
+    debug('Session creation')
     authfile = os.path.expanduser(OTRS_PASSWD)
     sessfile = '%s/%s'%(tempfile.gettempdir(), OTRS_SESSION)
     try:
@@ -97,6 +101,7 @@ def create_session(force=False):
     except OSError, e:
         print e
 
+    debug('Decrypt password')
     # Get crypted user/pass
     try:
         plain = core.Data()
@@ -115,6 +120,7 @@ def create_session(force=False):
         plain = core.Data(open(authfile, 'r').read())
     plain.seek(0, 0)
     # Send credential and get session token
+    debug('Login attempt')
     if options['flag_ssl']:
         conn = httplib.HTTPSConnection(HOST)
     else:
@@ -123,8 +129,7 @@ def create_session(force=False):
     res = conn.getresponse()
     cookie = res.getheader('set-cookie')
     if cookie is not None:
-        if options['flag_verbose']:
-            print 'Creating %s with %s'%(sessfile, cookie)
+        debug('Creating %s with %s'%(sessfile, cookie))
         f = open(sessfile, 'w+')
         f.write(cookie)
         f.close()
@@ -144,6 +149,7 @@ def passphrase_cb(x,y,z):
 
 def get_args(args):
     global options
+    debug('Process arguments')
     try:
         opts, reqs = getopt.gnu_getopt(args, 'rghva:u:Qq:', ['reverse', 'no-google',
                                                            'help', 'verbose',
@@ -194,16 +200,13 @@ def get_args(args):
     except getopt.GetoptError:
         usage()
 
-    if options['flag_verbose']:
-        print 'Options in use: amount=%s, unit=%s'%(
-            options['req_amount'], options['req_unit'])
-
     if len(args) < 1:
         usage()
 
 # Get configuration
 def get_conf():
     global HOST, GOOKEY, options
+    debug('Get configuration from file')
     options['flag_ssl'] = True
     options['uri_scheme'] = 'https'
     c = ConfigParser.RawConfigParser()
@@ -218,6 +221,7 @@ def get_conf():
         sys.exit('You must create a config file in %s (%s)'%(OTRS_CONFIG, e))
 
 def get_tickets():
+    debug('Get tickets list')
     # Construct POST request
     params = {
         'Body':                         options['req_body'],
@@ -240,8 +244,6 @@ def get_tickets():
     params = urllib.urlencode(params)
 
     # Get Tickets
-    if options['flag_verbose']:
-        print '\033[0;32mSearching tickets ...\033[0m'
     if options['flag_ssl']:
         conn = httplib.HTTPSConnection(HOST)
     else:
@@ -261,6 +263,7 @@ def get_tickets():
 
 def get_queues():
     global QUEUES
+    debug('Get queues list')
     if len(QUEUES) > 0:
         return
     if options['flag_ssl']:
@@ -280,6 +283,7 @@ def get_queues():
         QUEUES.append([str(queue.get('value')), queue.getText().replace('&nbsp;', '-')])
 
 def show_tickets(res):
+    debug('Show tickets')
     # Save result
     # TODO: Use filename given in http header
     csvdata = res.read()
