@@ -28,15 +28,15 @@ class TestSearch(unittest.TestCase):
             self.fail('SystemExit expected')
 
     def test_queue_id(self):
-        args = ['-q', '1', '-u', 'year', '-a', '5']
+        args = ['-q', '1', '-u', 'year', '-a', '1', '-g']
         self.search(args)
 
     def test_queue_name(self):
-        args = ['-q', 'a', '-u', 'year', '-a', '5']
+        args = ['-q', 'a', '-u', 'year', '-a', '1', '-g']
         self.search(args)
 
     def test_search_basic(self):
-        args = ['-a', '1', '-u', 'week', '-g']
+        args = ['-a', '1', '-u', 'year', '-g']
         self.search(args)
 
     def search(self, args):
