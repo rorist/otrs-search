@@ -179,7 +179,6 @@ def get_args(args):
                 get_queues()
                 for k in QUEUES:
                     print k[0], k[1]
-                print QUEUES
                 sys.exit(0)
             elif opt in ('--queue', '-q'):
                 create_session()
