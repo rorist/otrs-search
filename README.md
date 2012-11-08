@@ -36,6 +36,8 @@ FEATURES
 
 TODO
 ----
+- Fix plaintext password ?
+- Fix setup.py in root with gpg key
 - Search by: state
 - Use filename in header to save CSV file
 - More stuff in configuration file
