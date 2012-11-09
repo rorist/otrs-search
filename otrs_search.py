@@ -91,11 +91,13 @@ def get_headers():
     }
 
 def create_session(force=False):
-    if os.path.exists('%s/%s'%(tempfile.gettempdir(), OTRS_SESSION)) and not force:
-        return
     debug('Session creation')
     authfile = os.path.expanduser(OTRS_PASSWD)
     sessfile = '%s/%s'%(tempfile.gettempdir(), OTRS_SESSION)
+    if os.path.exists(sessfile)\
+        and time.time() - os.path.getctime(sessfile) < 28800\
+        and not force:
+        return
     try:
         os.remove(sessfile)
     except OSError, e:
@@ -136,6 +138,7 @@ def create_session(force=False):
     else:
         os.remove(authfile)
         sys.exit('Authentification failed, please recreate %s'%authfile)
+    debug('Session created')
 
 def passphrase_cb(x,y,z):
     print 'Using key: %s'%x
