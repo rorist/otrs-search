@@ -23,6 +23,7 @@ options = {
     'uri_scheme':    'https',
     'flag_ssl':      True,
     'flag_google':   True,
+    'flag_link':     True,
     'flag_verbose':  False,
 }
 
