@@ -19,6 +19,7 @@ options = {
     'req_from':      '',
     'req_client':    '',
     'req_order':     'Up',
+    'req_csv':       None,
     #'req_state':    '',
     'uri_scheme':    'https',
     'flag_ssl':      True,
@@ -45,6 +46,7 @@ def help():
   -q, --queue\t\tSearch by queue name/IDs, it machtes the first queue, case insensitive
   -Q, --queues\t\tList queues name/IDs
   -h\t\t\tYou are reading it
+  --csv\t\t\tProvide custom CSV to show (taken from the OTRS search web interface)
   --id\t\t\tSearch ticket by id
   --client\t\tSearch by Client ID
   --from\t\tSearch by requestor (client or otrs agent) email
@@ -159,7 +161,7 @@ def get_args(args):
         opts, reqs = getopt.gnu_getopt(args, 'nrghva:u:Qq:', [
             'no-link', 'reverse', 'no-google',
             'help', 'verbose', 'amount=',
-            'unit=', 'id', 'from=',
+            'unit=', 'id', 'from=', 'csv=',
             'queues', 'queue=', 'client='])
         options['req_body'] = ' '.join(reqs)
         for opt, arg in opts:
@@ -174,6 +176,8 @@ def get_args(args):
                 options['req_order'] = 'Down'
             elif opt in ('-v', '--verbose'):
                 options['flag_verbose'] = True
+            elif opt == '--csv':
+                options['req_csv'] = arg
             elif opt in ('-a', '--amount'):
                 options['req_amount'] = arg
             elif opt in ('-u', '--unit'):
@@ -369,8 +373,15 @@ if __name__ == '__main__':
     sys.stdout = UTF8Writer(sys.stdout)
     get_conf()
     get_args(sys.argv[1:])
-    create_session()
-    res = get_tickets()
-    csvfile = write_data(res)
+    if options['req_csv'] == None:
+        create_session()
+        res = get_tickets()
+        csvfile = write_data(res)
+    else:
+        try:
+            csvfile = open(options['req_csv'], 'rb')
+        except Exception, e:
+            print e
+            sys.exit(1)
     show_tickets(csvfile)
 
