@@ -378,6 +378,7 @@ if __name__ == '__main__':
         res = get_tickets()
         csvfile = write_data(res)
     else:
+        # TODO: Apply filters like Queue, From, etc
         try:
             csvfile = open(options['req_csv'], 'rb')
         except Exception, e:
