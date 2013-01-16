@@ -63,6 +63,7 @@ CHANGELOG
 - 31.10.12 JBA Filter by queque, list queques
 - 02.11.12 JBA Add queue partial name matching
 - 07.11.12 JBA Search by client id
+- 16.01.13 JBA Add -n switch to hide URL
 
 LICENSE
 -------
