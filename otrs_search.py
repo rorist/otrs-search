@@ -289,20 +289,24 @@ def get_queues():
     for queue in soup.find('select', {'name': 'QueueIDs'}).findAll('option'):
         QUEUES.append([str(queue.get('value')), queue.getText().replace('&nbsp;', '-')])
 
-def show_tickets(res):
-    debug('Show tickets')
+def write_data(res):
     # Save result
     # TODO: Use filename given in http header
     csvdata = res.read()
     f = tempfile.mktemp()
-    csvfile = open(f, 'w+')
+    csvfile = open(f, 'wb+')
     csvfile.write(csvdata)
+    return csvfile
+
+def show_tickets(csvfile):
+    debug('Show tickets')
     csvfile.seek(0)
 
     # Show tickets
     tickets_nb = 0
     if os.path.getsize(csvfile.name) > 1:
-        tickets_nb = len(open(f, 'rb').readlines()) - 1
+        tickets_nb = len(csvfile.readlines()) - 1
+        csvfile.seek(0)
         tickets = csv.reader(csvfile, delimiter=';', quotechar='"')
         # Language dependent field number
         row = tickets.next()
@@ -358,7 +362,7 @@ def show_tickets(res):
 
     csvfile.close()
 
-    print 'CSV: %s'%f
+    print 'CSV: %s'%csvfile.name
 
 if __name__ == '__main__':
     UTF8Writer = codecs.getwriter('utf8')
@@ -367,5 +371,6 @@ if __name__ == '__main__':
     get_args(sys.argv[1:])
     create_session()
     res = get_tickets()
-    show_tickets(res)
+    csvfile = write_data(res)
+    show_tickets(csvfile)
 
