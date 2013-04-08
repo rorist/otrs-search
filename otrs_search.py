@@ -36,11 +36,11 @@ def usage():
 def help():
     print '''Usage: %s <request>
   with <requests> the request string to search. You can add multiple strings without protecting them with \'.
-  You can use the logical operators AND and OR.
+  You can use the logical operators && and ||.
   -a, --amount\t\tAmount of unit to search for in creation date (default: 1)
   -u, --unit\t\tSearch unit for creation date. Possible values are: day, hour, minute, month, week, year (default: day)
   -g, --no-google\tDo not create short link to the ticket
-  -n, --no-link\tDo not show links to OTRS
+  -n, --no-link\t\tDo not show links to OTRS
   -r, --reverse\t\tReverse the result order (always sorted by date)
   -v, --verbose\t\tDisplay what is being done
   -q, --queue\t\tSearch by queue name/IDs, it machtes the first queue, case insensitive

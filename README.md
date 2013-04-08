@@ -34,6 +34,16 @@ FEATURES
 - Authenticate once until reboot (uses session cookie)
 - Tested on OTRS 2.3.4, 2.4.9 and 3.1.11
 
+EXAMPLES
+--------
+    $ ./otrs_search.py --client dupont
+    $ ./otrs_search.py --id 1234567
+    $ ./otrs_search.py term1 AND term2
+    $ ./otrs_search.py 'term1&&term2'
+    $ ./otrs_search.py 'term1||term2'
+    $ ./otrs_search.py -u year -a 3 'term1'
+    $ ./otrs_search.py -q SomeQueue
+
 TODO
 ----
 - Fix plaintext password ?
@@ -41,12 +51,6 @@ TODO
 - Search by: state
 - Use filename in header to save CSV file
 - More stuff in configuration file
-
-EXAMPLES
---------
-    $ ./otrs_search.py --client dupont
-    $ ./otrs_search.py --id 1234567
-    $ ./otrs_search.py term1 AND term2
 
 CHANGELOG
 ---------
@@ -67,7 +71,7 @@ CHANGELOG
 
 LICENSE
 -------
-    
+
     Copyright (C) 2011 Jean-Baptiste Aubort <jean-baptiste.aubort@epfl.ch>
 
     This program is free software; you can redistribute it and/or modify it
