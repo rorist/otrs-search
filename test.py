@@ -42,8 +42,9 @@ class TestSearch(unittest.TestCase):
     def search(self, args):
         otrs_search.get_args(args)
         res = otrs_search.get_tickets()
+        csvfile = otrs_search.write_data(res)
         try:
-            otrs_search.show_tickets(res)
+            otrs_search.show_tickets(csvfile)
         except SystemExit, e:
             out = sys.stdout.getvalue()
             a = 'ticket(s)' in out
