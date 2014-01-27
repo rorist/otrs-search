@@ -5,26 +5,29 @@ Command line search script for the OTRS 2.x/3.x ticketing system, using https re
 
 DEPENDENCIES
 ------------
+
 - Python 2.6/2.7 (not compatible with Python 3)
 - PyMe (gpgme wrapper) http://pyme.sourceforge.net/
 - Python BeautifulSoup http://www.crummy.com/software/BeautifulSoup/
 
 INSTALLATION
 ------------
+
 - Install dependencies, on Debian/Ubuntu:
 
-    $ sudo apt-get install python-pyme python-beautifulsoup python-setuptools gnupg
+    sudo apt-get install python-pyme python-beautifulsoup python-setuptools gnupg
 
 - You must have a GPG key to create the password file
 
-    $ gpg --gen-key
+    gpg --gen-key
 
 - Install the script and configure it with:
 
-    $ sudo ./setup.py install
+    sudo ./setup.py install
 
 FEATURES
 --------
+
 - Full text search
 - Search by: id, client, operator, queues
 - Time units and amount support (year, month, ...)
@@ -36,16 +39,18 @@ FEATURES
 
 EXAMPLES
 --------
-    $ ./otrs_search.py --client dupont
-    $ ./otrs_search.py --id 1234567
-    $ ./otrs_search.py term1 AND term2
-    $ ./otrs_search.py 'term1&&term2'
-    $ ./otrs_search.py 'term1||term2'
-    $ ./otrs_search.py -u year -a 3 'term1'
-    $ ./otrs_search.py -q SomeQueue
+
+    ./otrs_search.py --client dupont
+    ./otrs_search.py --id 1234567
+    ./otrs_search.py term1 AND term2
+    ./otrs_search.py 'term1&&term2'
+    ./otrs_search.py 'term1||term2'
+    ./otrs_search.py -u year -a 3 'term1'
+    ./otrs_search.py -q SomeQueue
 
 TODO
 ----
+
 - Fix plaintext password ?
 - Fix setup.py in root with gpg key
 - Search by: state
@@ -54,6 +59,7 @@ TODO
 
 CHANGELOG
 ---------
+
 - 08.11.11 JBA Creation du script, recherche basique
 - 09.11.11 JBA Gestion des sessions 
 - 16.11.11 JBA Search by Ticket ID or client email 
@@ -85,3 +91,4 @@ LICENSE
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 
 See gpl-3.0.txt
+
