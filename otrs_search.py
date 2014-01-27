@@ -14,7 +14,7 @@ QUEUES = {}
 
 options = {
     'req_amount':    1,
-    'req_unit':      'day',
+    'req_unit':      'hour',
     'req_ticketid':  '',
     'req_from':      '',
     'req_client':    '',
@@ -209,9 +209,6 @@ def get_args(args):
             #elif opt == '--state':
             #    options['req_state'] = 'open'
     except getopt.GetoptError:
-        usage()
-
-    if len(args) < 1:
         usage()
 
 # Get configuration
