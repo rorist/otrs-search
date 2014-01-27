@@ -6,6 +6,9 @@ import urllib, urlparse, httplib, sys, json, csv, tempfile, os, getpass, getopt
 import time, ConfigParser, ssl, codecs, re
 from pyme import core, constants, errors
 
+#import ipdb
+#ipdb.set_trace()
+
 REQ = '/otrs/index.pl' #FIXME: In config file ?
 OTRS_CONFIG = '~/.otrs-config'
 OTRS_PASSWD = '~/.otrs-passwd'
@@ -292,10 +295,10 @@ def get_queues():
 
 def write_data(res):
     # Save result
-    # TODO: Use filename given in http header
+    filename = dict(res.getheaders())['content-disposition'][23:-1]
+    filename = '%s/%s' % (tempfile.gettempdir(), filename)
     csvdata = res.read()
-    f = tempfile.mktemp()
-    csvfile = open(f, 'wb+')
+    csvfile = open(filename, 'wb+')
     csvfile.write(csvdata)
     return csvfile
 
