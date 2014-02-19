@@ -29,8 +29,9 @@ options = {
     'flag_google':   True,
     'flag_link':     True,
     'flag_verbose':  False,
+    'flag_ticketid': True,
     'date_fmt_in':   'YYYY-MM-DD HH:mm',
-    'date_fmt_out':  'YYYY-MM-DD HH:mm',
+    'date_fmt_out':  'YYYY-MM-DD HH:mm ',
 }
 
 def usage():
@@ -51,7 +52,7 @@ def help():
   -q, --queue\t\tSearch by queue name/IDs, it machtes the first queue, case insensitive
   -Q, --queues\t\tList queues name/IDs
   -h\t\t\tYou are reading it
-  -f, --format\t\tDate format (default: 'YYYY-MM-DD HH:ss')
+  -f, --format\t\tDate format, must include final space (default: 'YYYY-MM-DD HH:ss ')
   --csv\t\t\tProvide custom CSV to show (taken from the OTRS search web interface)
   --id\t\t\tSearch ticket by id
   --client\t\tSearch by Client ID
@@ -164,12 +165,12 @@ def get_args(args):
     global options
     debug('Process arguments')
     try:
-        opts, reqs = getopt.gnu_getopt(args, 'nrghva:u:Qq:f:', [
+        opts, reqs = getopt.gnu_getopt(args, 'nrghva:u:Qq:f:t', [
             'no-link', 'reverse', 'no-google',
             'help', 'verbose', 'amount=',
             'unit=', 'id', 'from=', 'csv=',
             'queues', 'queue=', 'client=',
-            'format='])
+            'format=', 'ticketid'])
         options['req_body'] = ' '.join(reqs)
         for opt, arg in opts:
             if opt in ('-h', '--help'):
@@ -183,6 +184,8 @@ def get_args(args):
                 options['req_order'] = 'Down'
             elif opt in ('-v', '--verbose'):
                 options['flag_verbose'] = True
+            elif opt in ('-t', '--ticketid'):
+                options['flag_ticketid'] = False
             elif opt in ('-f', '--format'):
                 options['date_fmt_out'] = arg
             elif opt == '--csv':
@@ -351,6 +354,7 @@ def show_tickets(csvfile):
             date     = arrow.get(row[2], options['date_fmt_in']).format(options['date_fmt_out'])
             queue    = row[id_queue].decode('utf-8')
             title    = row[id_title].decode('utf-8')
+            ticketid_show = ''
             link     = ''
             state    = ''
             if row[id_state]=='open' or row[id_state]=='new':
@@ -364,9 +368,13 @@ def show_tickets(csvfile):
                 options['uri_scheme'], HOST, REQ, int(ticketid))
             if options['flag_google']:
                 link = shorten(link)
+
+        if options['flag_ticketid']:
+            ticketid_show = ticketid + ' '
+
         try:
-            print '\033[0;32m%s \033[0;34m%s \033[0;33m[%s] %s\033[0m\033[1m%s\033[0m\033[0m %s\033[0m'%(
-                date, ticketid, queue, state, title, link)
+            print '\033[0;32m%s\033[0;34m%s\033[0;33m[%s] %s\033[0m\033[1m%s\033[0m\033[0m %s\033[0m'%(
+                date, ticketid_show, queue, state, title, link)
         except UnicodeEncodeError, e:
             print 'ticketid = %s : %s'%(ticketid,e)
 
