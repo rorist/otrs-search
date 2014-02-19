@@ -2,7 +2,7 @@
 # -*- coding: utf8 -*-
 
 from BeautifulSoup import BeautifulSoup
-import urllib, urlparse, httplib, sys, json, csv, tempfile, os, getpass, getopt
+import urllib, urlparse, httplib, sys, json, csv, tempfile, os, getpass, getopt, arrow
 import time, ConfigParser, ssl, codecs, re
 from pyme import core, constants, errors
 
@@ -29,6 +29,7 @@ options = {
     'flag_google':   True,
     'flag_link':     True,
     'flag_verbose':  False,
+    'date_fmt':      'YYYY-MM-DD HH:ss',
 }
 
 def usage():
@@ -49,6 +50,7 @@ def help():
   -q, --queue\t\tSearch by queue name/IDs, it machtes the first queue, case insensitive
   -Q, --queues\t\tList queues name/IDs
   -h\t\t\tYou are reading it
+  -f, --format\t\tDate format (default: 'YYYY-MM-DD HH:ss')
   --csv\t\t\tProvide custom CSV to show (taken from the OTRS search web interface)
   --id\t\t\tSearch ticket by id
   --client\t\tSearch by Client ID
@@ -161,11 +163,12 @@ def get_args(args):
     global options
     debug('Process arguments')
     try:
-        opts, reqs = getopt.gnu_getopt(args, 'nrghva:u:Qq:', [
+        opts, reqs = getopt.gnu_getopt(args, 'nrghva:u:Qq:f:', [
             'no-link', 'reverse', 'no-google',
             'help', 'verbose', 'amount=',
             'unit=', 'id', 'from=', 'csv=',
-            'queues', 'queue=', 'client='])
+            'queues', 'queue=', 'client=',
+            'format='])
         options['req_body'] = ' '.join(reqs)
         for opt, arg in opts:
             if opt in ('-h', '--help'):
@@ -179,6 +182,8 @@ def get_args(args):
                 options['req_order'] = 'Down'
             elif opt in ('-v', '--verbose'):
                 options['flag_verbose'] = True
+            elif opt in ('-f', '--format'):
+                options['date_fmt'] = arg
             elif opt == '--csv':
                 options['req_csv'] = arg
             elif opt in ('-a', '--amount'):
@@ -342,7 +347,7 @@ def show_tickets(csvfile):
     for row in tickets:
         try:
             ticketid = row[0]
-            date     = row[2].decode('utf-8')
+            date     = arrow.get(row[2]).format(options['date_fmt'])
             queue    = row[id_queue].decode('utf-8')
             title    = row[id_title].decode('utf-8')
             link     = ''

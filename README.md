@@ -9,13 +9,15 @@ DEPENDENCIES
 - Python 2.6/2.7 (not compatible with Python 3)
 - PyMe (gpgme wrapper) http://pyme.sourceforge.net/
 - Python BeautifulSoup http://www.crummy.com/software/BeautifulSoup/
+- Python Arrow
 
 INSTALLATION
 ------------
 
 - Install dependencies, on Debian/Ubuntu:
 
-    sudo apt-get install python-pyme python-beautifulsoup python-setuptools gnupg
+    sudo apt-get install python-pyme python-setuptools gnupg python-pip
+    sudo pip install arrow beautifulsoup
 
 - You must have a GPG key to create the password file
 
