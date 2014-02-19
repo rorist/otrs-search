@@ -29,7 +29,7 @@ options = {
     'flag_google':   True,
     'flag_link':     True,
     'flag_verbose':  False,
-    'date_fmt':      'YYYY-MM-DD HH:ss',
+    'date_fmt':      'YYYY-MM-DD HH:mm',
 }
 
 def usage():
