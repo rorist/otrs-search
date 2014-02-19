@@ -29,7 +29,8 @@ options = {
     'flag_google':   True,
     'flag_link':     True,
     'flag_verbose':  False,
-    'date_fmt':      'YYYY-MM-DD HH:mm',
+    'date_fmt_in':   'YYYY-MM-DD HH:mm',
+    'date_fmt_out':  'YYYY-MM-DD HH:mm',
 }
 
 def usage():
@@ -183,7 +184,7 @@ def get_args(args):
             elif opt in ('-v', '--verbose'):
                 options['flag_verbose'] = True
             elif opt in ('-f', '--format'):
-                options['date_fmt'] = arg
+                options['date_fmt_out'] = arg
             elif opt == '--csv':
                 options['req_csv'] = arg
             elif opt in ('-a', '--amount'):
@@ -347,7 +348,7 @@ def show_tickets(csvfile):
     for row in tickets:
         try:
             ticketid = row[0]
-            date     = arrow.get(row[2]).format(options['date_fmt'])
+            date     = arrow.get(row[2], options['date_fmt_in']).format(options['date_fmt_out'])
             queue    = row[id_queue].decode('utf-8')
             title    = row[id_title].decode('utf-8')
             link     = ''
