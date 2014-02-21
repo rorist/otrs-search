@@ -50,6 +50,9 @@ EXAMPLES
     ./otrs_search.py -u year -a 3 'term1'
     ./otrs_search.py -q SomeQueue
 
+    # Last hour tickets, last first, showing only hour and no link
+    watch -c -n 30 "otrs_search.py -a 1 -n -r -f ' HH:mm ' -t"
+
 TODO
 ----
 
@@ -76,6 +79,7 @@ CHANGELOG
 - 02.11.12 JBA Add queue partial name matching
 - 07.11.12 JBA Search by client id
 - 16.01.13 JBA Add -n switch to hide URL
+- 02.2014  JBA Add -t, -f switches
 
 LICENSE
 -------

@@ -40,9 +40,14 @@ def usage():
     sys.exit(0)
 
 def help():
-    print '''Usage: %s <request>
-  with <requests> the request string to search. You can add multiple strings without protecting them with \'.
+    print '''USAGE
+  %s <REQUEST> [OPTIONS]
+
+REQUEST
+  with the request string to search. You can add multiple strings without protecting them with \'.
   You can use the logical operators && and ||.
+
+OPTIONS
   -a, --amount\t\tAmount of unit to search for in creation date (default: 1)
   -u, --unit\t\tSearch unit for creation date. Possible values are: day, hour, minute, month, week, year (default: hour)
   -g, --no-google\tDo not create short link to the ticket
@@ -53,11 +58,18 @@ def help():
   -Q, --queues\t\tList queues name/IDs
   -h\t\t\tYou are reading it
   -f, --format\t\tDate format, must include final space (default: 'YYYY-MM-DD HH:ss ')
+  -t, --ticketid\tRemove ticket ID from the results
   --csv\t\t\tProvide custom CSV to show (taken from the OTRS search web interface)
   --id\t\t\tSearch ticket by id
   --client\t\tSearch by Client ID
   --from\t\tSearch by requestor (client or otrs agent) email
-  --state\t\tTODO: Search by ticket state. Possible values: 'new', 'open', 'closed', 'merged', 'pending', 'removed' '''%os.path.basename(sys.argv[0])
+  --state\t\tTODO: Search by ticket state. Possible values: 'new', 'open', 'closed', 'merged', 'pending', 'removed'
+
+CREDITS
+  Jean-Baptiste (Rorist) Aubort 2011-2014
+  https://github.com/rorist/otrs-search/
+  GPLv3
+'''%os.path.basename(sys.argv[0])
 
 def debug(message):
     if options['flag_verbose']:
