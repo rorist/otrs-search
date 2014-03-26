@@ -294,6 +294,7 @@ def get_tickets():
     return res
 
 def get_queues():
+    # TODO/FIXME: When the session is expired force create_session(force=True) !!
     global QUEUES
     debug('Get queues list')
     if len(QUEUES) > 0:
