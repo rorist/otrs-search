@@ -408,7 +408,7 @@ if __name__ == '__main__':
         # TODO: Apply filters like Queue, From, etc
         try:
             csvfile = open(options['req_csv'], 'rb')
-        except Exception, e:
+        except IOException, e:
             print e
             sys.exit(1)
     show_tickets(csvfile)
