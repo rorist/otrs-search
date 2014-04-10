@@ -53,6 +53,8 @@ EXAMPLES
     # Last hour tickets, last first, showing only hour and no link
     watch -c -n 30 "otrs_search.py -a 1 -n -r -f ' HH:mm ' -t"
 
+    ![](./otrs-search.png)
+
 TODO
 ----
 
