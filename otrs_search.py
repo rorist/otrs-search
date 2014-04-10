@@ -414,5 +414,5 @@ if __name__ == '__main__':
                 sys.exit(1)
         show_tickets(csvfile)
     except KeyboardInterrupt, e:
-        pass
+        print 'KeyboardInterrupt'
 
