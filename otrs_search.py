@@ -283,7 +283,7 @@ def get_tickets():
     try:
         conn.request("POST", REQ, params, get_headers())
         res = conn.getresponse()
-    except Exception, e:
+    except httplib.HTTPException, e:
         sys.exit(e)
 
     # Check response
@@ -308,7 +308,7 @@ def get_queues():
             'Action': 'AgentTicketSearch',
             'Subaction': 'AJAX'}), get_headers())
         res = conn.getresponse()
-    except Exception, e:
+    except httplib.HTTPException, e:
         sys.exit(e)
     soup = BeautifulSoup(res.read())
     QUEUES = []
@@ -396,20 +396,23 @@ def show_tickets(csvfile):
     print 'CSV: %s'%csvfile.name
 
 if __name__ == '__main__':
-    UTF8Writer = codecs.getwriter('utf8')
-    sys.stdout = UTF8Writer(sys.stdout)
-    get_conf()
-    get_args(sys.argv[1:])
-    if options['req_csv'] == None:
-        create_session()
-        res = get_tickets()
-        csvfile = write_data(res)
-    else:
-        # TODO: Apply filters like Queue, From, etc
-        try:
-            csvfile = open(options['req_csv'], 'rb')
-        except IOException, e:
-            print e
-            sys.exit(1)
-    show_tickets(csvfile)
+    try:
+        UTF8Writer = codecs.getwriter('utf8')
+        sys.stdout = UTF8Writer(sys.stdout)
+        get_conf()
+        get_args(sys.argv[1:])
+        if options['req_csv'] == None:
+            create_session()
+            res = get_tickets()
+            csvfile = write_data(res)
+        else:
+            # TODO: Apply filters like Queue, From, etc
+            try:
+                csvfile = open(options['req_csv'], 'rb')
+            except IOException, e:
+                print e
+                sys.exit(1)
+        show_tickets(csvfile)
+    except KeyboardInterrupt, e:
+        pass
 
