@@ -1,0 +1,4 @@
+"Numéro de ticket";"Âge";"Créé";"Fermés";"FirstLock";"FirstResponse";"État";"Priorité";"File";"Verrouiller";"Propriétaire";"UserFirstname";"UserLastname";"Code client";"customer realname";"De";"Sujet";"AccountedTime";"ArticleTree";"SolutionInMin";"SolutionDiffInMin";"FirstResponseInMin";"FirstResponseDiffInMin"
+"1234567";"6 m";"2013-01-01 00:00:00";;;;"nouveau";"P4 - normale";"QUEUENAME";"déverrouillé";"root@localhost";"Admin";"OTRS";"client@example.com";;"Client <client@example.com>";"Ticket title";"0";;;;;
+"1234567";"6 m";"2014-01-01 00:00:00";;;;"nouveau";"P4 - normale";"QUEUENAME";"déverrouillé";"root@localhost";"Admin";"OTRS";"client@example.com";;"Client <client@example.com>";"Ticket title";"0";;;;;
+"1234567";"6 m";"2015-01-01 00:00:00";;;;"nouveau";"P4 - normale";"QUEUENAME";"déverrouillé";"root@localhost";"Admin";"OTRS";"client@example.com";;"Client <client@example.com>";"Ticket title";"0";;;;;

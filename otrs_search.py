@@ -57,7 +57,7 @@ OPTIONS
   -v, --verbose\t\tDisplay what is being done
   -q, --queue\t\tSearch by queue name/IDs, it machtes the first queue, case insensitive
   -Q, --queues\t\tList queues name/IDs
-  -h\t\t\tYou are reading it
+  -h, --help\t\tYou are reading it
   -f, --format\t\tDate format, must include final space (default: 'YYYY-MM-DD HH:ss ')
   -t, --ticketid\tRemove ticket ID from the results
   --csv\t\t\tProvide custom CSV to show (taken from the OTRS search web interface)
