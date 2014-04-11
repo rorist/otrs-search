@@ -12,7 +12,7 @@ from pyme import core, constants, errors
 REQ = '/otrs/index.pl' #FIXME: In config file ?
 OTRS_CONFIG = '~/.otrs-config'
 OTRS_PASSWD = '~/.otrs-passwd'
-OTRS_SESSION = '.otrs-session'
+OTRS_SESSION = '~/.otrs-session'
 OTRS_SESSION_MAX = 28800 # [s] for SessionMaxTime
 QUEUES = {}
 
@@ -100,7 +100,7 @@ def shorten(url):
 def get_session():
     debug('Get session')
     try:
-        f = open('%s/%s'%(tempfile.gettempdir(), OTRS_SESSION), 'r')
+        f = open(os.path.expanduser(OTRS_SESSION), 'r')
         session = f.read()
         f.close()
         return session
@@ -117,7 +117,7 @@ def get_headers():
 def create_session(force=False):
     debug('Session creation')
     authfile = os.path.expanduser(OTRS_PASSWD)
-    sessfile = '%s/%s'%(tempfile.gettempdir(), OTRS_SESSION)
+    sessfile = os.path.expanduser(OTRS_SESSION)
     if os.path.exists(sessfile)\
         and time.time() - os.path.getctime(sessfile) < OTRS_SESSION_MAX\
         and not force:
