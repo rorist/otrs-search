@@ -13,6 +13,7 @@ REQ = '/otrs/index.pl' #FIXME: In config file ?
 OTRS_CONFIG = '~/.otrs-config'
 OTRS_PASSWD = '~/.otrs-passwd'
 OTRS_SESSION = '.otrs-session'
+OTRS_SESSION_MAX = 28800 # [s] for SessionMaxTime
 QUEUES = {}
 
 options = {
@@ -118,7 +119,7 @@ def create_session(force=False):
     authfile = os.path.expanduser(OTRS_PASSWD)
     sessfile = '%s/%s'%(tempfile.gettempdir(), OTRS_SESSION)
     if os.path.exists(sessfile)\
-        and time.time() - os.path.getctime(sessfile) < 28800\
+        and time.time() - os.path.getctime(sessfile) < OTRS_SESSION_MAX\
         and not force:
         return
     try:
@@ -159,7 +160,7 @@ def create_session(force=False):
         f.write(cookie)
         f.close()
     else:
-        os.remove(authfile)
+        #os.remove(authfile)
         sys.exit('Authentification failed, please recreate %s'%authfile)
     debug('Session created')
 
