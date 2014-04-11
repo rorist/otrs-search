@@ -49,14 +49,14 @@ class TestSearch(unittest.TestCase):
             r = re.match(u'^\x1b\[0;32m\d{4}-\d{2}-\d{2} \x1b\[0;34m\d{7}', l)
             self.assertNotEqual(r, None)
 
-    def test_stuff(self):
-        args = ['-n']
-        otrs_search.get_args(args)
-        res = otrs_search.get_tickets()
-        csvdata = csv.reader(res.read().split('\n'), delimiter=';', quotechar='"')
-        csvdata.next()
-        for i in csvdata:
-            print i
+#    def test_stuff(self):
+#        args = ['-n']
+#        otrs_search.get_args(args)
+#        res = otrs_search.get_tickets()
+#        csvdata = csv.reader(res.read().split('\n'), delimiter=';', quotechar='"')
+#        csvdata.next()
+#        for i in csvdata:
+#            print i
 
     def test_queue_id(self):
         args = ['-q', '1', '-u', 'year', '-a', '1', '-g']
