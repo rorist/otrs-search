@@ -290,7 +290,8 @@ def get_tickets():
     # Check response
     if res.getheader('Content-type') != 'text/csv; charset=utf-8':
         create_session(force=True)
-        sys.exit('Session created, please make request again.')
+        debug('Session re-created')
+        return get_tickets()
 
     return res
 
