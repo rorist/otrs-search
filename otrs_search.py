@@ -98,9 +98,10 @@ def shorten(url):
 #    return False
 
 def get_session():
-    debug('Get session')
+    sessfile = os.path.expanduser(OTRS_SESSION)
+    debug('Use session from %s' % sessfile)
     try:
-        f = open(os.path.expanduser(OTRS_SESSION), 'r')
+        f = open(sessfile, 'r')
         session = f.read()
         f.close()
         return session
@@ -121,13 +122,17 @@ def create_session(force=False):
     if os.path.exists(sessfile)\
         and time.time() - os.path.getctime(sessfile) < OTRS_SESSION_MAX\
         and not force:
+        debug('Session exists')
         return
+    else:
+        debug('Session doent exist')
+
     try:
         os.remove(sessfile)
     except OSError, e:
-        print e
+        pass
 
-    debug('Decrypt password')
+    debug('Decrypt password from %s' % sessfile)
     # Get crypted user/pass
     try:
         plain = core.Data()
@@ -147,12 +152,14 @@ def create_session(force=False):
     plain.seek(0, 0)
     creds = plain.read().strip()
     # Send credential and get session token
-    debug('Login attempt')
+    debug('Login attempt as %s' % creds)
     if options['flag_ssl']:
+        debug('Using SSL')
         conn = httplib.HTTPSConnection(HOST)
     else:
+        debug('Not using SSL')
         conn = httplib.HTTPConnection(HOST)
-    conn.request("POST", REQ, 'Action=Login&RequestedURL=&Lang=fr&TimeOffset=-60&'+plain.read(), get_headers())
+    conn.request("POST", REQ, 'Action=Login&RequestedURL=&Lang=fr&TimeOffset=-60&'+creds, get_headers())
     res = conn.getresponse()
     cookie = res.getheader('set-cookie')
     if cookie is not None:
@@ -240,11 +247,12 @@ def get_args(args):
 # Get configuration
 def get_conf():
     global HOST, GOOKEY, options
-    debug('Get configuration from file')
+    conffile = os.path.expanduser(OTRS_CONFIG)
+    debug('Get configuration from %s' % conffile)
     options['flag_ssl'] = True
     options['uri_scheme'] = 'https'
     c = ConfigParser.RawConfigParser()
-    c.read(os.path.expanduser(OTRS_CONFIG))
+    c.read(conffile)
     try:
         HOST = c.get('Main', 'host')
         GOOKEY = c.get('Main', 'google_key')
