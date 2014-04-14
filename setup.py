@@ -30,4 +30,4 @@ setup(
 )
 
 print
-import otrs_create_config
+import create_config
