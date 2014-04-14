@@ -37,7 +37,7 @@ FEATURES
 - URL shortener using goog.gl (with token support)
 - GPG encrypted password file
 - Authenticate once until reboot (uses session cookie)
-- Tested on OTRS 2.3.4, 2.4.9 and 3.1.11
+- Tested on OTRS 2.3.4, 2.4.9, 3.1.11, 3.2.4, and 3.3
 
 EXAMPLES
 --------
