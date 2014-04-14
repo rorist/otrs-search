@@ -151,7 +151,7 @@ def create_session(force=False):
         conn = httplib.HTTPSConnection(HOST)
     else:
         conn = httplib.HTTPConnection(HOST)
-    conn.request("POST", REQ, 'Action=Login&RequestedURL=Action%3DLogout&Lang=fr&TimeOffset=-60&'+plain.read(), get_headers())
+    conn.request("POST", REQ, 'Action=Login&RequestedURL=&Lang=fr&TimeOffset=-60&'+plain.read(), get_headers())
     res = conn.getresponse()
     cookie = res.getheader('set-cookie')
     if cookie is not None:
