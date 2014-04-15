@@ -77,10 +77,8 @@ def debug(message):
         print '\033[0;30m--%s\033[0m'%message
 
 def shorten(url):
-    conn = httplib.HTTPSConnection('www.googleapis.com')
-    conn.request("POST", '/urlshortener/v1/url?key=%s&fields=id'%GOOKEY, '{"longUrl": "%s"}'%url, {'Content-Type': 'application/json'})
-    data = json.loads(conn.getresponse().read())
-    conn.close() # Use a connection pool or smth
+    gooconn.request("POST", '/urlshortener/v1/url?key=%s&fields=id'%GOOKEY, '{"longUrl": "%s"}'%url, {'Content-Type': 'application/json'})
+    data = json.loads(gooconn.getresponse().read())
     if 'id' in data:
         return data['id']
     return '(goog.gl: %s)'%data['error']['message']
@@ -423,7 +421,15 @@ if __name__ == '__main__':
             except IOException, e:
                 print e
                 sys.exit(1)
+
+        if options['flag_google']:
+            gooconn = httplib.HTTPSConnection('www.googleapis.com')
+
         show_tickets(csvfile)
+
+        if options['flag_google']:
+            gooconn.close()
+
     except KeyboardInterrupt, e:
         print 'KeyboardInterrupt'
 
