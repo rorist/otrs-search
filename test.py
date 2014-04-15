@@ -44,9 +44,7 @@ class TestSearch(unittest.TestCase):
         csvfile = otrs_search.write_data(res)
         otrs_search.show_tickets(csvfile)
         lines = sys.stdout.getvalue().split('\n')
-        #log = logging.getLogger( "TEST" )
         for l in lines[1:-2]:
-            #log.debug( "l=%r", l)
             r = re.match(u'^\x1b\[0;32m\d{4}-\d{2}-\d{2} \x1b\[0;34m\d{7}', l)
             self.assertNotEqual(r, None)
 
@@ -90,5 +88,7 @@ class TestSearch(unittest.TestCase):
 
 if __name__ == '__main__':
     logging.basicConfig( stream=sys.stderr )
-    logging.getLogger( "TEST" ).setLevel( logging.DEBUG )
+    log = logging.getLogger( "TEST" )
+    log.setLevel( logging.DEBUG )
+    #log.debug( "l=%r", l)
     unittest.main(buffer=True)
