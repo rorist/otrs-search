@@ -136,7 +136,7 @@ def create_session(force=False):
         plain = core.Data()
         crypted = core.Data(open(authfile, 'r').read())
     except IOError, e:
-        print 'Please create a password file with User=user&Password=password, encrypted with gnupg (%s)'%e
+        print 'Please create a password file with User=user&Password=password, encrypted with gnupg'
         sys.exit(e)
     # Decrypt user/pass
     c = core.Context()
@@ -167,7 +167,6 @@ def create_session(force=False):
         f.write(cookie)
         f.close()
     else:
-        #os.remove(authfile)
         sys.exit('Authentification failed, please recreate %s'%authfile)
     debug('Session created')
 
@@ -330,8 +329,11 @@ def write_data(res):
     filename = dict(res.getheaders())['content-disposition'][23:-1]
     filename = '%s/%s' % (tempfile.gettempdir(), filename)
     csvdata = res.read()
-    csvfile = open(filename, 'wb+')
-    csvfile.write(csvdata)
+    try:
+        csvfile = open(filename, 'wb+')
+        csvfile.write(csvdata)
+    except IOError, e:
+        sys.exit(e)
     return csvfile
 
 def show_tickets(csvfile):
@@ -420,8 +422,7 @@ if __name__ == '__main__':
             try:
                 csvfile = open(options['req_csv'], 'rb')
             except IOException, e:
-                print e
-                sys.exit(1)
+                sys.exit(e)
 
         if options['flag_google']:
             gooconn = httplib.HTTPSConnection('www.googleapis.com')
