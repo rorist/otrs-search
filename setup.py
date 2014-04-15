@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from setuptools import setup
-import sys
+import sys, shutil
 
 try:
     import pyme
@@ -29,5 +29,10 @@ setup(
     requires =  ['pyme', 'BeautifulSoup'],
 )
 
+shutil.rmtree('build', ignore_errors=True)
+shutil.rmtree('dist', ignore_errors=True)
+shutil.rmtree('otrs_search.egg-info', ignore_errors=True)
+
 print
-import create_config
+print '\033[1mPlease run ./create_config.py to create configuration files\033[0m'
+print
