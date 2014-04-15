@@ -59,15 +59,15 @@ class TestSearch(unittest.TestCase):
 #            print i
 
     def test_queue_id(self):
-        args = ['-q', '1', '-u', 'year', '-a', '1', '-g']
+        args = ['-q', '1', '-u', 'week', '-a', '1', '-g']
         self.search(args)
 
     def test_queue_name(self):
-        args = ['-q', 'a', '-u', 'year', '-a', '1', '-g']
+        args = ['-q', 'a', '-u', 'week', '-a', '1', '-g']
         self.search(args)
 
     def test_search_basic(self):
-        args = ['-a', '1', '-u', 'year', '-g']
+        args = ['-a', '1', '-u', 'week', '-g']
         self.search(args)
 
     def search(self, args):
