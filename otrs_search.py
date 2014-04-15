@@ -160,6 +160,7 @@ def create_session(force=False):
     conn.request("POST", REQ, 'Action=Login&RequestedURL=&Lang=fr&TimeOffset=-60&'+creds, get_headers())
     res = conn.getresponse()
     cookie = res.getheader('set-cookie')
+    conn.close()
     if cookie is not None:
         debug('Creating %s with %s'%(sessfile, cookie))
         f = open(sessfile, 'w+')
