@@ -3,7 +3,7 @@
 
 from BeautifulSoup import BeautifulSoup
 import urllib, urlparse, httplib, sys, json, csv, tempfile, os, getpass, getopt, arrow
-import time, ConfigParser, ssl, codecs, re
+import time, ConfigParser, ssl, codecs, re, errno
 from pyme import core, constants, errors
 
 #import ipdb
@@ -434,4 +434,7 @@ if __name__ == '__main__':
 
     except KeyboardInterrupt, e:
         print 'KeyboardInterrupt'
+    except IOError, e:
+        if e.errno != errno.EPIPE:
+            print e
 
