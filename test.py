@@ -24,7 +24,7 @@ class TestSearch(unittest.TestCase):
         except SystemExit, e:
             out = sys.stdout.getvalue().split('\n')[:-1]
             for l in out:
-                self.assertIsNotNone(re.match('^\d{1,3} [\ \.\-_0-9a-zA-Z]*$', l.encode('ascii', 'ignore')))
+                self.assertIsNotNone(re.match('^\d{1,3} [\ \.\-_0-9\w]*$', l.encode('ascii', 'ignore')))
             self.assertEquals(e.code, 0)
         else:
             self.fail('SystemExit expected')
