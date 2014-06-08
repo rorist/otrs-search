@@ -16,16 +16,18 @@ INSTALLATION
 
 - Install dependencies, on Debian/Ubuntu:
 
-    sudo apt-get install python-pyme python-setuptools gnupg python-pip
-    sudo pip install arrow beautifulsoup
+```
+sudo apt-get install python-pyme python-setuptools gnupg python-pip
+sudo pip install arrow beautifulsoup
+```
 
 - You must have a GPG key to create the password file
 
-    gpg --gen-key
+    ```gpg --gen-key```
 
 - Install the script and configure it with:
 
-    sudo ./setup.py install
+    ```sudo ./setup.py install```
 
 FEATURES
 --------
@@ -42,16 +44,18 @@ FEATURES
 EXAMPLES
 --------
 
-    ./otrs_search.py --client dupont
-    ./otrs_search.py --id 1234567
-    ./otrs_search.py term1 AND term2
-    ./otrs_search.py 'term1&&term2'
-    ./otrs_search.py 'term1||term2'
-    ./otrs_search.py -u year -a 3 'term1'
-    ./otrs_search.py -q SomeQueue
+```
+./otrs_search.py --client dupont
+./otrs_search.py --id 1234567
+./otrs_search.py term1 AND term2
+./otrs_search.py 'term1&&term2'
+./otrs_search.py 'term1||term2'
+./otrs_search.py -u year -a 3 'term1'
+./otrs_search.py -q SomeQueue
 
-    # Last hour tickets, last first, showing only hour and no link
-    watch -c -n 30 "otrs_search.py -a 1 -n -r -f ' HH:mm ' -t"
+# Last hour tickets, last first, showing only hour and no link
+watch -c -n 30 "otrs_search.py -a 1 -n -r -f ' HH:mm ' -t"
+```
 
 ![](./image.png)
 
@@ -86,17 +90,19 @@ CHANGELOG
 LICENSE
 -------
 
-    Copyright (C) 2011 Jean-Baptiste Aubort <jean-baptiste.aubort@epfl.ch>
+```
+Copyright (C) 2011-2014 Jean-Baptiste Aubort <jean-baptiste.aubort@epfl.ch>
 
-    This program is free software; you can redistribute it and/or modify it
-    under the terms of the GNU General Public License as published by the
-    Free Software Foundation; either version 3 of the License, or any later
-    version. This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
-    Public License for more details. You should have received a copy of the
-    GNU General Public License along with this program; if not, write to the
-    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
+This program is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation; either version 3 of the License, or any later
+version. This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+Public License for more details. You should have received a copy of the
+GNU General Public License along with this program; if not, write to the
+Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
+```
 
 See gpl-3.0.txt
 
