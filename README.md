@@ -16,10 +16,10 @@ INSTALLATION
 
 - Install dependencies, on Debian/Ubuntu:
 
-```
+    ```
 sudo apt-get install python-pyme python-setuptools gnupg python-pip
 sudo pip install arrow beautifulsoup
-```
+    ```
 
 - You must have a GPG key to create the password file
 
