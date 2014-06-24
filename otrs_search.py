@@ -31,6 +31,7 @@ options = {
     'flag_link':     True,
     'flag_verbose':  False,
     'flag_ticketid': True,
+    'flag_silent':   False,
     'date_fmt_in':   'YYYY-MM-DD HH:mm',
     'date_fmt_out':  'YYYY-MM-DD HH:mm ',
 }
@@ -60,6 +61,7 @@ OPTIONS
   -h, --help\t\tYou are reading it
   -f, --format\t\tDate format, must include final space (default: 'YYYY-MM-DD HH:ss ')
   -t, --ticketid\tRemove ticket ID from the results
+  -s, --silent\t\tSilent mode, hide tickets result
   --csv\t\t\tProvide custom CSV to show (taken from the OTRS search web interface)
   --id\t\t\tSearch ticket by id
   --client\t\tSearch by Client ID
@@ -184,12 +186,12 @@ def get_args(args):
     global options
     debug('Process arguments')
     try:
-        opts, reqs = getopt.gnu_getopt(args, 'nrghva:u:Qq:f:t', [
+        opts, reqs = getopt.gnu_getopt(args, 'nrghva:u:Qq:f:ts', [
             'no-link', 'reverse', 'no-google',
             'help', 'verbose', 'amount=',
             'unit=', 'id', 'from=', 'csv=',
             'queues', 'queue=', 'client=',
-            'format=', 'ticketid'])
+            'format=', 'ticketid', 'silent'])
         options['req_body'] = ' '.join(reqs)
         for opt, arg in opts:
             if opt in ('-h', '--help'):
@@ -207,6 +209,8 @@ def get_args(args):
                 options['flag_ticketid'] = False
             elif opt in ('-f', '--format'):
                 options['date_fmt_out'] = arg
+            elif opt in ('-s', '--silent'):
+                options['flag_silent'] = True
             elif opt == '--csv':
                 options['req_csv'] = arg
             elif opt in ('-a', '--amount'):
@@ -373,35 +377,36 @@ def show_tickets(csvfile):
         os.remove(csvfile.name)
         sys.exit(0)
 
-    for row in tickets:
-        try:
-            ticketid = row[0]
-            date     = arrow.get(row[2], options['date_fmt_in']).format(options['date_fmt_out'])
-            queue    = row[id_queue].decode('utf-8')
-            title    = row[id_title].decode('utf-8')
-            ticketid_show = ''
-            link     = ''
-            state    = ''
-            if row[id_state]=='open' or row[id_state]=='new':
-                state = '\033[1;31m[%s] \033[0m'%row[id_state].upper().decode('utf-8')
-        except IndexError, e:
-            print row
-            sys.exit(e)
+    if not options['flag_silent']:
+        for row in tickets:
+            try:
+                ticketid = row[0]
+                date     = arrow.get(row[2], options['date_fmt_in']).format(options['date_fmt_out'])
+                queue    = row[id_queue].decode('utf-8')
+                title    = row[id_title].decode('utf-8')
+                ticketid_show = ''
+                link     = ''
+                state    = ''
+                if row[id_state]=='open' or row[id_state]=='new':
+                    state = '\033[1;31m[%s] \033[0m'%row[id_state].upper().decode('utf-8')
+            except IndexError, e:
+                print row
+                sys.exit(e)
 
-        if options['flag_link']:
-            link = '%s://%s%s?Action=AgentTicketZoom&TicketNumber=%s&ZoomExpand=1'%(
-                options['uri_scheme'], HOST, REQ, int(ticketid))
-            if options['flag_google']:
-                link = shorten(link)
+            if options['flag_link']:
+                link = '%s://%s%s?Action=AgentTicketZoom&TicketNumber=%s&ZoomExpand=1'%(
+                    options['uri_scheme'], HOST, REQ, int(ticketid))
+                if options['flag_google']:
+                    link = shorten(link)
 
-        if options['flag_ticketid']:
-            ticketid_show = ticketid + ' '
+            if options['flag_ticketid']:
+                ticketid_show = ticketid + ' '
 
-        try:
-            print '\033[0;32m%s\033[0;34m%s\033[0;33m[%s] %s\033[0m\033[1m%s\033[0m\033[0m %s\033[0m'%(
-                date, ticketid_show, queue, state, title, link)
-        except UnicodeEncodeError, e:
-            print 'ticketid = %s : %s'%(ticketid,e)
+            try:
+                print '\033[0;32m%s\033[0;34m%s\033[0;33m[%s] %s\033[0m\033[1m%s\033[0m\033[0m %s\033[0m'%(
+                    date, ticketid_show, queue, state, title, link)
+            except UnicodeEncodeError, e:
+                print 'ticketid = %s : %s'%(ticketid,e)
 
     csvfile.close()
 
